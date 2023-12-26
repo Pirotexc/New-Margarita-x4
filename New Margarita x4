@@ -4,7 +4,7 @@
 
 const roomName = '🎅MARGARITA x4🎅';
 const maxPlayers = 30;
-const roomPublic = false;
+const roomPublic = true;
 const geo = [{"lat": 10.48801, "lon": -66.87919, "code": "VE"}]; 
 
 var roomWebhook = ''; // this webhook is used to send the details of the room (chat, join, leave) ; it should be in a private discord channel
@@ -1409,12 +1409,6 @@ function handleConnection(request) {
 const displayPlayerInfo = (player) => {
     console.log(`Player ${player.name} (ID: ${player.id}) - Team: ${player.team}`);
 };
-
-// Log the current players in the room every 60 seconds
-setInterval(() => {
-    console.log("Current players in the room:");
-    room.getPlayerList().forEach(displayPlayerInfo);
-}, 60000);
 
 room.onPlayerAdminChange = function (changedPlayer, byPlayer) { updateTeams(); if (!changedPlayer.admin && getRole(changedPlayer) >= Role.ADMIN_TEMP) { room.setPlayerAdmin(changedPlayer.id, true); return;} updateAdmins(byPlayer != null && !changedPlayer.admin && changedPlayer.id == byPlayer.id ? changedPlayer.id : 0);};
 room.onKickRateLimitSet = function (min, rate, burst, byPlayer) { if (byPlayer != null) { room.sendAnnouncement(`☄️ No está permitido cambiar el límite de kickrate. Debe permanecer en "6-0-0".`, player.id, announcementColor, HaxNotification.CHAT); room.setKickRateLimit(6, 0, 0);}};

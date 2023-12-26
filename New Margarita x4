@@ -1,0 +1,1431 @@
+/* VARIABLES */
+
+/* ROOM */
+
+const roomName = '🎅MARGARITA x4🎅';
+const maxPlayers = 30;
+const roomPublic = false;
+const geo = [{"lat": 10.48801, "lon": -66.87919, "code": "VE"}]; 
+
+var roomWebhook = ''; // this webhook is used to send the details of the room (chat, join, leave) ; it should be in a private discord channel
+var gameWebhook = ''; // this webhook is used to send the summary of the games ; it should be in a public discord channel
+var calladminWebhook = '';
+var fetchRecordingVariable = true;
+var timeLimit = 3;
+var scoreLimit = 3;
+
+var gameConfig = {
+    roomName: roomName,
+    maxPlayers: maxPlayers,
+    public: roomPublic,
+    noPlayer: true,
+    geo: geo[0],
+}
+
+var room = HBInit(gameConfig);
+
+const trainingMap = '{ "name": "Dark Training", "width":420,"height":200,"spawnDistance":180,"bg":{"type":"hockey","width":368,"height":171,"kickOffRadius":65,"cornerRadius":0},"vertexes":[{"x":-368,"y":171,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":-368,"y":65,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":-368,"y":-65,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":-368,"y":-171,"trait":"ballArea","bCoef":1,"cMask":["ball"]},{"x":368,"y":171,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":368,"y":65,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":368,"y":-65,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":368,"y":-171,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":0,"y":65,"trait":"line"},{"x":0,"y":-65,"trait":"line"},{"bCoef":1,"trait":"ballArea","x":368,"y":171},{"bCoef":1,"trait":"ballArea","x":368,"y":-171},{"bCoef":0,"trait":"line","x":0,"y":171},{"bCoef":0,"trait":"line","x":0,"y":-171},{"x":0,"y":65,"trait":"line"},{"x":0,"y":-65,"trait":"line"},{"x":377,"y":-65,"trait":"line","cMask":["ball"],"bCoef":1},{"x":377,"y":-171,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":-377,"y":-65,"trait":"line","cMask":["ball"],"bCoef":1},{"x":-377,"y":-171,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":-377,"y":65,"trait":"line","cMask":["ball"],"bCoef":1},{"x":-377,"y":171,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":377,"y":65,"trait":"line","cMask":["ball"],"bCoef":1},{"x":377,"y":171,"trait":"ballArea","cMask":["ball"],"bCoef":1},{"x":0,"y":65,"trait":"line"},{"x":0,"y":-65,"trait":"line"},{"x":-368.53340356886,"y":-62.053454903872,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"F8F8F8","pos":[-700,-80]},{"x":-400.05760771891,"y":-62.053454903872,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"F8F8F8","pos":[-700,-80]},{"x":-400.05760771891,"y":64.043361696331,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"F8F8F8","pos":[-700,80]},{"x":-368.53340356886,"y":64.043361696331,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"F8F8F8","pos":[-700,80]},{"x":368.09926357786,"y":63.94882446641,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"F8F8F8","pos":[-700,-80]},{"x":400,"y":64,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"F8F8F8","pos":[-700,-80]},{"x":400,"y":-61.927767991658,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"F8F8F8","pos":[-700,80]},{"x":368.9681846993,"y":-62.144998272018,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"F8F8F8","pos":[-700,80]},{"x":-368,"y":-142.37229643041,"bCoef":0.1,"trait":"line","color":"F8F8F8","curve":-90},{"x":-260.90035258157,"y":-50.168480548544,"bCoef":0.1,"trait":"line","color":"F8F8F8","curve":0},{"x":-368,"y":-160.81305960678,"bCoef":0.1,"trait":"line","curve":-90},{"x":-358.5379338963,"y":-171,"bCoef":0.1,"trait":"line","curve":-90},{"x":-368,"y":141.33175243687,"bCoef":0.1,"trait":"line","color":"F8F8F8","curve":90},{"x":-260.90035258157,"y":49.127936555002,"bCoef":0.1,"trait":"line","color":"F8F8F8","curve":0},{"x":-368,"y":159.77251561324,"bCoef":0.1,"trait":"line","curve":90},{"x":-358.5379338963,"y":171,"bCoef":0.1,"trait":"line","curve":90},{"x":368,"y":159.77251561324,"bCoef":0.1,"trait":"line","curve":-90},{"x":358.36266315432,"y":171,"bCoef":0.1,"trait":"line","curve":-90},{"x":368,"y":-160.81305960678,"bCoef":0.1,"trait":"line","curve":90},{"x":358.36266315432,"y":-171,"bCoef":0.1,"trait":"line","curve":90},{"x":368,"y":-142.37229643041,"bCoef":0.1,"trait":"line","color":"F8F8F8","curve":90},{"x":260.72508183959,"y":-50.168480548544,"bCoef":0.1,"trait":"line","color":"F8F8F8","curve":90},{"x":368,"y":141.33175243687,"bCoef":0.1,"trait":"line","color":"F8F8F8","curve":-90},{"x":260.72508183959,"y":49.127936555002,"bCoef":0.1,"trait":"line","color":"F8F8F8","curve":-90},{"x":260.72508183959,"y":-50.168480548544,"bCoef":0.1,"trait":"line","color":"F8F8F8","curve":0},{"x":260.72508183959,"y":49.127936555002,"bCoef":0.1,"trait":"line","color":"F8F8F8","curve":0},{"x":-250.86909422732,"y":-1.2295321189394,"bCoef":0.1,"trait":"line","curve":180},{"x":-250.86909422732,"y":0.18898812539692,"bCoef":0.1,"trait":"line","curve":180},{"x":-250.86909422732,"y":-2.6480523632758,"bCoef":0.1,"trait":"line","curve":180},{"x":-250.86909422732,"y":1.6075083697333,"bCoef":0.1,"trait":"line","curve":180},{"x":-250.86909422732,"y":0.89824824756514,"bCoef":0.1,"trait":"line","curve":180},{"x":-250.86909422732,"y":-1.9387922411076,"bCoef":0.1,"trait":"line","curve":180},{"x":-250.86909422732,"y":1.9621384308174,"bCoef":0.1,"trait":"line","curve":180},{"x":-250.86909422732,"y":-3.0026824243599,"bCoef":0.1,"trait":"line","curve":180},{"x":250.69382348534,"y":-1.2295321189394,"bCoef":0.1,"trait":"line","curve":180},{"x":250.69382348534,"y":0.18898812539692,"bCoef":0.1,"trait":"line","curve":180},{"x":250.69382348534,"y":-2.6480523632758,"bCoef":0.1,"trait":"line","curve":180},{"x":250.69382348534,"y":1.6075083697333,"bCoef":0.1,"trait":"line","curve":180},{"x":250.69382348534,"y":0.89824824756514,"bCoef":0.1,"trait":"line","curve":180},{"x":250.69382348534,"y":-1.9387922411076,"bCoef":0.1,"trait":"line","curve":180},{"x":250.69382348534,"y":1.9621384308174,"bCoef":0.1,"trait":"line","curve":180},{"x":250.69382348534,"y":-3.0026824243599,"bCoef":0.1,"trait":"line","curve":180},{"x":-185.66591492467,"y":-1.2295321189394,"bCoef":0.1,"trait":"line","curve":180},{"x":-185.66591492467,"y":0.18898812539692,"bCoef":0.1,"trait":"line","curve":180},{"x":-185.66591492467,"y":-2.6480523632758,"bCoef":0.1,"trait":"line","curve":180},{"x":-185.66591492467,"y":1.6075083697333,"bCoef":0.1,"trait":"line","curve":180},{"x":-185.66591492467,"y":0.89824824756514,"bCoef":0.1,"trait":"line","curve":180},{"x":-185.66591492467,"y":-1.9387922411076,"bCoef":0.1,"trait":"line","curve":180},{"x":-185.66591492467,"y":1.9621384308174,"bCoef":0.1,"trait":"line","curve":180},{"x":-185.66591492467,"y":-3.0026824243599,"bCoef":0.1,"trait":"line","curve":180},{"x":185.49064418269,"y":-1.2295321189394,"bCoef":0.1,"trait":"line","curve":180},{"x":185.49064418269,"y":0.18898812539692,"bCoef":0.1,"trait":"line","curve":180},{"x":185.49064418269,"y":-2.6480523632758,"bCoef":0.1,"trait":"line","curve":180},{"x":185.49064418269,"y":1.6075083697333,"bCoef":0.1,"trait":"line","curve":180},{"x":185.49064418269,"y":0.89824824756514,"bCoef":0.1,"trait":"line","curve":180},{"x":185.49064418269,"y":-1.9387922411076,"bCoef":0.1,"trait":"line","curve":180},{"x":185.49064418269,"y":1.9621384308174,"bCoef":0.1,"trait":"line","curve":180},{"x":185.49064418269,"y":-3.0026824243599,"bCoef":0.1,"trait":"line","curve":180},{"x":-160.58776903904,"y":-159.39453936245,"bCoef":0.1,"trait":"line"},{"x":-160.58776903904,"y":-182.09086327183,"bCoef":0.1,"trait":"line"},{"x":-80.337702205015,"y":-159.39453936245,"bCoef":0.1,"trait":"line"},{"x":-80.337702205015,"y":-182.09086327183,"bCoef":0.1,"trait":"line"},{"x":160.41249829706,"y":-159.39453936245,"bCoef":0.1,"trait":"line"},{"x":160.41249829706,"y":-182.09086327183,"bCoef":0.1,"trait":"line"},{"x":80.162431463036,"y":-159.39453936245,"bCoef":0.1,"trait":"line"},{"x":80.162431463036,"y":-182.09086327183,"bCoef":0.1,"trait":"line"},{"x":-254.88159756902,"y":-171,"bCoef":0.1,"trait":"line"},{"x":-254.88159756902,"y":-182.09086327183,"bCoef":0.1,"trait":"line"},{"x":-371.91294503531,"y":-87.759267023458,"bCoef":0.1,"trait":"line"},{"x":-384.61920561736,"y":-87.759267023458,"bCoef":0.1,"trait":"line"},{"x":371.73767429333,"y":-87.759267023458,"bCoef":0.1,"trait":"line"},{"x":384.44393487538,"y":-87.759267023458,"bCoef":0.1,"trait":"line"},{"x":-371.91294503531,"y":86.718723029916,"bCoef":0.1,"trait":"line"},{"x":-384.61920561736,"y":86.718723029916,"bCoef":0.1,"trait":"line"},{"x":371.73767429333,"y":86.718723029916,"bCoef":0.1,"trait":"line"},{"x":384.44393487538,"y":86.718723029916,"bCoef":0.1,"trait":"line"},{"x":-254.88159756902,"y":171,"bCoef":0.1,"trait":"line"},{"x":-254.88159756902,"y":181.05031927829,"bCoef":0.1,"trait":"line"},{"x":254.70632682704,"y":-171,"bCoef":0.1,"trait":"line"},{"x":254.70632682704,"y":-182.09086327183,"bCoef":0.1,"trait":"line"},{"x":254.70632682704,"y":171,"bCoef":0.1,"trait":"line"},{"x":254.70632682704,"y":181.05031927829,"bCoef":0.1,"trait":"line"},{"x":369,"y":65,"trait":"ballArea","cMask":["ball"],"bCoef":1,"vis":false},{"x":369,"y":-65,"trait":"ballArea","cMask":["ball"],"bCoef":1,"vis":false},{"x":-370,"y":65,"trait":"ballArea","cMask":["ball"],"bCoef":1,"vis":false},{"x":-370,"y":-65,"trait":"ballArea","cMask":["ball"],"bCoef":1,"vis":false},{"x":371,"y":-65,"trait":"ballArea","cMask":["ball"],"bCoef":0,"_selected":"segment"},{"x":371,"y":-171,"trait":"ballArea","cMask":["ball"],"bCoef":0,"_selected":"segment"},{"x":371,"y":65,"trait":"ballArea","cMask":["ball"],"bCoef":0},{"x":371,"y":171,"trait":"ballArea","cMask":["ball"],"bCoef":0},{"x":-371,"y":65,"trait":"ballArea","cMask":["ball"],"bCoef":0},{"x":-371,"y":171,"trait":"ballArea","cMask":["ball"],"bCoef":0},{"x":-371,"y":-65,"trait":"ballArea","cMask":["ball"],"bCoef":0},{"x":-371,"y":-171,"trait":"ballArea","cMask":["ball"],"bCoef":0}],"segments":[{"v0":0,"v1":1,"trait":"ballArea"},{"v0":2,"v1":3,"trait":"ballArea"},{"v0":4,"v1":5,"trait":"ballArea"},{"v0":6,"v1":7,"trait":"ballArea"},{"v0":8,"v1":9,"trait":"line","curve":180,"cGroup":["blueKO"]},{"v0":8,"v1":9,"trait":"line","curve":-180,"cGroup":["redKO"]},{"vis":true,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":1,"v1":0,"cMask":["ball"],"x":-368},{"vis":true,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":5,"v1":4,"cMask":["ball"],"x":368},{"vis":true,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":2,"v1":3,"cMask":["ball"],"x":-368},{"vis":true,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":6,"v1":7,"cMask":["ball"],"x":368},{"vis":true,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":0,"v1":10,"y":171},{"vis":true,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":3,"v1":11,"y":-171},{"curve":0,"vis":true,"color":"FFFFFF","bCoef":0,"trait":"line","v0":12,"v1":13},{"curve":-180,"vis":true,"color":"FFFFFF","bCoef":0,"trait":"line","v0":9,"v1":8},{"curve":180,"vis":true,"color":"FFFFFF","bCoef":0,"trait":"line","v0":15,"v1":14},{"curve":0,"vis":true,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":2,"v1":1},{"curve":0,"vis":true,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":6,"v1":5},{"vis":false,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":16,"v1":17,"cMask":["ball"],"x":330},{"vis":false,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":18,"v1":19,"cMask":["ball"],"x":-330},{"vis":false,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":20,"v1":21,"cMask":["ball"],"x":-330},{"vis":false,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":22,"v1":23,"cMask":["ball"],"x":330},{"v0":26,"v1":27,"curve":0,"color":"F8F8F8","cMask":["red","blue","ball"],"trait":"goalNet","pos":[-700,-80],"y":-80},{"v0":27,"v1":28,"color":"F8F8F8","cMask":["red","blue","ball"],"trait":"goalNet","x":-590},{"v0":28,"v1":29,"curve":0,"color":"F8F8F8","cMask":["red","blue","ball"],"trait":"goalNet","pos":[-700,80],"y":80},{"v0":30,"v1":31,"curve":0,"color":"F8F8F8","cMask":["red","blue","ball"],"trait":"goalNet","pos":[-700,-80],"y":-80},{"v0":31,"v1":32,"color":"F8F8F8","cMask":["red","blue","ball"],"trait":"goalNet","x":-590},{"v0":32,"v1":33,"curve":0,"color":"F8F8F8","cMask":["red","blue","ball"],"trait":"goalNet","pos":[-700,80],"y":80},{"v0":34,"v1":35,"curve":94.0263701017,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line"},{"v0":37,"v1":36,"curve":86.632306418889,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line"},{"v0":38,"v1":39,"curve":-94.026370101699,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line"},{"v0":35,"v1":39,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line"},{"v0":41,"v1":40,"curve":-86.632306418888,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line"},{"v0":43,"v1":42,"curve":86.632306418884,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line"},{"v0":45,"v1":44,"curve":-86.632306418899,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line"},{"v0":46,"v1":47,"curve":-94.026370101699,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line"},{"v0":48,"v1":49,"curve":94.026370101699,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line"},{"v0":50,"v1":51,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":390},{"v0":53,"v1":52,"curve":-180.00692920292,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-375},{"v0":52,"v1":53,"curve":-180.00218240614,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-375},{"v0":55,"v1":54,"curve":-179.64823645332,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-375},{"v0":54,"v1":55,"curve":-180.35758668147,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-375},{"v0":57,"v1":56,"curve":-180.02357323962,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-375},{"v0":56,"v1":57,"curve":-180.00924102399,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-375},{"v0":59,"v1":58,"curve":-180.06885755885,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-375},{"v0":58,"v1":59,"curve":-180.02948353257,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-375},{"v0":61,"v1":60,"curve":-179.99869069543,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":375},{"v0":60,"v1":61,"curve":-179.99939258776,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":375},{"v0":63,"v1":62,"curve":-180.08826047163,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":375},{"v0":62,"v1":63,"curve":-179.91186753664,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":375},{"v0":65,"v1":64,"curve":-179.99528711105,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":375},{"v0":64,"v1":65,"curve":-179.99743836358,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":375},{"v0":67,"v1":66,"curve":-179.98626041101,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":375},{"v0":66,"v1":67,"curve":-179.99175181595,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":375},{"v0":69,"v1":68,"curve":-180.04715562398,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-277.5},{"v0":68,"v1":69,"curve":-179.95294709391,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-277.5},{"v0":71,"v1":70,"curve":-179.95715750564,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-277.5},{"v0":70,"v1":71,"curve":-179.89943871875,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-277.5},{"v0":73,"v1":72,"curve":-179.94773754738,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-277.5},{"v0":72,"v1":73,"curve":-179.98221351296,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-277.5},{"v0":75,"v1":74,"curve":-180.4151727218,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-277.5},{"v0":74,"v1":75,"curve":-179.58764458796,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-277.5},{"v0":77,"v1":76,"curve":-180.00086646359,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":277.5},{"v0":76,"v1":77,"curve":-180.01965986376,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":277.5},{"v0":79,"v1":78,"curve":-180.03532601389,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":277.5},{"v0":78,"v1":79,"curve":-179.99380079,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":277.5},{"v0":81,"v1":80,"curve":-180.0044468452,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":277.5},{"v0":80,"v1":81,"curve":-180.01386779847,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":277.5},{"v0":83,"v1":82,"curve":-180.05158287563,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":277.5},{"v0":82,"v1":83,"curve":-180.01212223878,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":277.5},{"v0":84,"v1":85,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-240},{"v0":86,"v1":87,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-120},{"v0":88,"v1":89,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":240},{"v0":90,"v1":91,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":120},{"v0":92,"v1":93,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-381},{"v0":94,"v1":95,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-240,"y":123},{"v0":96,"v1":97,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-240,"y":123},{"v0":98,"v1":99,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-240,"y":-123},{"v0":100,"v1":101,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-240,"y":-123},{"v0":102,"v1":103,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":-381},{"v0":104,"v1":105,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":381},{"v0":106,"v1":107,"curve":0,"vis":true,"color":"F8F8F8","bCoef":0.1,"trait":"line","x":381},{"curve":0,"vis":false,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":109,"v1":108,"x":369},{"curve":0,"vis":false,"color":"FFFFFF","bCoef":1,"trait":"ballArea","v0":111,"v1":110,"x":-370},{"vis":false,"color":"FFFFFF","bCoef":0,"trait":"ballArea","v0":112,"v1":113,"cMask":["ball"],"x":371,"_selected":true},{"vis":false,"color":"FFFFFF","bCoef":0,"trait":"ballArea","v0":114,"v1":115,"cMask":["ball"],"x":371},{"vis":false,"color":"FFFFFF","bCoef":0,"trait":"ballArea","v0":116,"v1":117,"cMask":["ball"],"x":-371},{"vis":false,"color":"FFFFFF","bCoef":0,"trait":"ballArea","v0":118,"v1":119,"cMask":["ball"],"x":-371}],"goals":[{"p0":[-374.25,-62.053454903872],"p1":[-374.25,64.043361696331],"team":"red"},{"p0":[374.25,62],"p1":[374.25,-62],"team":"blue"}],"discs":[{"radius":3.9405255187564,"pos":[-368.53340356886,64.043361696331],"color":"6666CC","trait":"goalPost","y":80},{"radius":3.9405255187564,"pos":[-368.53340356886,-62.053454903872],"color":"6666CC","trait":"goalPost","y":-80,"x":-560},{"radius":3.9405255187564,"pos":[368.9681846993,-62.144998272018],"color":"6666CC","trait":"goalPost","y":80},{"radius":3.9405255187564,"pos":[368.09926357786,63.94882446641],"color":"6666CC","trait":"goalPost","y":-80,"x":-560},{"radius":3,"invMass":0,"pos":[-368,-171],"color":"FFCC00","bCoef":0.1,"trait":"line"},{"radius":3,"invMass":0,"pos":[-368,171],"color":"FFCC00","bCoef":0.1,"trait":"line"},{"radius":3,"invMass":0,"pos":[368,171],"color":"FFCC00","bCoef":0.1,"trait":"line"},{"radius":3,"invMass":0,"pos":[368,-171],"color":"FFCC00","bCoef":0.1,"trait":"line"}],"planes":[{"normal":[0,1],"dist":-171,"trait":"ballArea"},{"normal":[0,-1],"dist":-171,"trait":"ballArea"},{"normal":[0,1],"dist":-200,"bCoef":0.2,"cMask":["all"]},{"normal":[0,-1],"dist":-200,"bCoef":0.2,"cMask":["all"]},{"normal":[1,0],"dist":-420,"bCoef":0.2,"cMask":["all"]},{"normal":[-1,0],"dist":-420,"bCoef":0.2,"cMask":["all"]}],"traits":{"ballArea":{"vis":false,"bCoef":1,"cMask":["ball"]},"goalPost":{"radius":8,"invMass":0,"bCoef":1},"goalNet":{"vis":true,"bCoef":0.1,"cMask":["all"]},"kickOffBarrier":{"vis":false,"bCoef":0.1,"cGroup":["redKO","blueKO"],"cMask":["red","blue"]},"line":{"vis":true,"bCoef":0,"cMask":[""]},"arco":{"radius":2,"cMask":["n\/d"],"color":"cccccc"}},"playerPhysics":{"acceleration":0.11,"kickingAcceleration":0.083,"kickStrength":5,"bCoef":0},"ballPhysics":{"radius":6.25,"color":"FFCC00","bCoef":0.4,"invMass":1.5,"damping":0.99}}';
+const classicMap = `{"name":"𝐅𝐮𝐭 [𝐗𝟑⚔️𝐗𝟒]", "canBeStored":false, "width":620,"height":270,"spawnDistance":350,"bg":{"type":"hockey","width":550,"height":240,"kickOffRadius":80,"cornerRadius":0},"vertexes":[{"x":550,"y":240,"trait":"ballArea"},{"x":550,"y":-240,"trait":"ballArea"},{"x":0,"y":270,"trait":"kickOffBarrier"},{"x":0,"y":80,"bCoef":0.15,"trait":"kickOffBarrier","color":"000000","vis":true,"curve":180,"_selected":"segment"},{"x":0,"y":-80,"bCoef":0.15,"trait":"kickOffBarrier","color":"000000","vis":true,"curve":180,"_selected":"segment"},{"x":0,"y":-270,"trait":"kickOffBarrier"},{"x":-550,"y":-80,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"000000","pos":[-700,-80]},{"x":-590,"y":-80,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"000000","pos":[-700,-80]},{"x":-590,"y":80,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"000000","pos":[-700,80]},{"x":-550,"y":80,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"000000","pos":[-700,80]},{"x":550,"y":-80,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"000000","pos":[700,-80]},{"x":590,"y":-80,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"000000","pos":[700,-80]},{"x":590,"y":80,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"000000","pos":[700,80]},{"x":550,"y":80,"cMask":["red","blue","ball"],"trait":"goalNet","curve":0,"color":"000000","pos":[700,80]},{"x":-550,"y":80,"bCoef":1.15,"cMask":["ball"],"trait":"ballArea","color":"000000","pos":[-700,80],"_selected":"segment"},{"x":-550,"y":240,"bCoef":1.15,"cMask":["ball"],"trait":"ballArea","color":"000000","_selected":"segment"},{"x":-550,"y":-80,"bCoef":1.15,"cMask":["ball"],"trait":"ballArea","color":"000000","pos":[-700,-80],"_selected":"segment"},{"x":-550,"y":-240,"bCoef":1.15,"cMask":["ball"],"trait":"ballArea","color":"000000","_selected":"segment"},{"x":-550,"y":240,"bCoef":1,"cMask":["ball"],"trait":"ballArea","_selected":"segment","color":"000000"},{"x":550,"y":240,"bCoef":1,"cMask":["ball"],"trait":"ballArea","_selected":"segment","color":"000000"},{"x":550,"y":80,"bCoef":1.15,"cMask":["ball"],"trait":"ballArea","pos":[700,80],"_selected":"segment","color":"000000"},{"x":550,"y":240,"bCoef":1.15,"cMask":["ball"],"trait":"ballArea","_selected":"segment","color":"000000"},{"x":550,"y":-240,"bCoef":1.15,"cMask":["ball"],"trait":"ballArea","color":"000000","_selected":"segment"},{"x":550,"y":-80,"bCoef":1.15,"cMask":["ball"],"trait":"ballArea","color":"000000","pos":[700,-80],"_selected":"segment"},{"x":550,"y":-240,"bCoef":0,"cMask":["ball"],"trait":"ballArea"},{"x":550,"y":-240,"bCoef":0,"cMask":["ball"],"trait":"ballArea"},{"x":-550,"y":-240,"bCoef":1,"cMask":["ball"],"trait":"ballArea","curve":0,"_selected":"segment","color":"000000"},{"x":550,"y":-240,"bCoef":1,"cMask":["ball"],"trait":"ballArea","curve":0,"_selected":"segment","color":"000000"},{"x":0,"y":-240,"bCoef":0.1,"cMask":["red","blue"],"cGroup":["redKO","blueKO"],"trait":"kickOffBarrier","_selected":"segment","color":"000000"},{"x":0,"y":-80,"bCoef":0.1,"cMask":["red","blue"],"cGroup":["redKO","blueKO"],"trait":"kickOffBarrier","_selected":"segment","color":"000000"},{"x":0,"y":80,"bCoef":0.1,"cMask":["red","blue"],"cGroup":["redKO","blueKO"],"trait":"kickOffBarrier","_selected":"segment","color":"000000"},{"x":0,"y":240,"bCoef":0.1,"cMask":["red","blue"],"cGroup":["redKO","blueKO"],"trait":"kickOffBarrier","_selected":"segment","color":"000000"},{"x":0,"y":-80,"bCoef":0.1,"cMask":["red","blue"],"trait":"kickOffBarrier","vis":true,"color":"A10A0A"},{"x":0,"y":80,"bCoef":0.1,"cMask":["red","blue"],"trait":"kickOffBarrier","vis":true,"color":"A10A0A"},{"x":0,"y":80,"trait":"kickOffBarrier","color":"A10A0A","vis":true,"curve":-180},{"x":0,"y":-80,"trait":"kickOffBarrier","color":"A10A0A","vis":true,"curve":-180},{"x":0,"y":80,"trait":"kickOffBarrier","color":"A10A0A","vis":true,"curve":0},{"x":0,"y":-80,"trait":"kickOffBarrier","color":"A10A0A","vis":true,"curve":0},{"x":-557.5,"y":80,"bCoef":1,"cMask":["ball"],"trait":"ballArea","curve":0,"vis":false,"pos":[-700,80]},{"x":-557.5,"y":240,"bCoef":1,"cMask":["ball"],"trait":"ballArea","curve":0,"vis":false},{"x":-557.5,"y":-240,"bCoef":1,"cMask":["ball"],"trait":"ballArea","vis":false,"curve":0},{"x":-557.5,"y":-80,"bCoef":1,"cMask":["ball"],"trait":"ballArea","vis":false,"curve":0,"pos":[-700,-80]},{"x":557.5,"y":-240,"bCoef":1,"cMask":["ball"],"trait":"ballArea","vis":false,"curve":0},{"x":557.5,"y":-80,"bCoef":1,"cMask":["ball"],"trait":"ballArea","vis":false,"curve":0,"pos":[700,-80]},{"x":557.5,"y":80,"bCoef":1,"cMask":["ball"],"trait":"ballArea","curve":0,"vis":false,"pos":[700,80]},{"x":557.5,"y":240,"bCoef":1,"cMask":["ball"],"trait":"ballArea","curve":0,"vis":false},{"x":0,"y":-80,"bCoef":0.1,"trait":"line","_selected":"segment","color":"000000"},{"x":0,"y":80,"bCoef":0.1,"trait":"line","_selected":"segment","color":"000000"},{"x":-550,"y":-80,"bCoef":0.1,"trait":"line","_selected":"segment","color":"000000"},{"x":-550,"y":80,"bCoef":0.1,"trait":"line","_selected":"segment","color":"000000"},{"x":550,"y":-80,"bCoef":0.1,"trait":"line","_selected":"segment","color":"000000"},{"x":550,"y":80,"bCoef":0.1,"trait":"line","_selected":"segment","color":"000000"},{"x":-240,"y":256,"bCoef":0.1,"trait":"line"},{"x":-120,"y":256,"bCoef":0.1,"trait":"line"},{"x":-240,"y":-256,"bCoef":0.1,"trait":"line"},{"x":-120,"y":-224,"bCoef":0.1,"trait":"line"},{"x":-120,"y":-256,"bCoef":0.1,"trait":"line"},{"x":240,"y":256,"bCoef":0.1,"trait":"line"},{"x":120,"y":224,"bCoef":0.1,"trait":"line"},{"x":120,"y":256,"bCoef":0.1,"trait":"line"},{"x":240,"y":-224,"bCoef":0.1,"trait":"line"},{"x":240,"y":-256,"bCoef":0.1,"trait":"line"},{"x":120,"y":-224,"bCoef":0.1,"trait":"line"},{"x":120,"y":-256,"bCoef":0.1,"trait":"line"},{"x":-381,"y":240,"bCoef":0.1,"trait":"line"},{"x":-381,"y":256,"bCoef":0.1,"trait":"line"},{"x":-550,"y":200,"bCoef":0.1,"trait":"line","color":"000000","curve":-90,"_selected":"segment"},{"x":-390,"y":70,"bCoef":0.1,"trait":"line","color":"000000","curve":0,"_selected":true},{"x":-550,"y":226,"bCoef":0.1,"trait":"line","curve":-90,"_selected":"segment","color":"000000"},{"x":-536,"y":240,"bCoef":0.1,"trait":"line","curve":-90,"_selected":"segment","color":"000000"},{"x":-550,"y":-200,"bCoef":0.1,"trait":"line","color":"000000","curve":90,"_selected":"segment"},{"x":-390,"y":-70,"bCoef":0.1,"trait":"line","color":"000000","curve":0,"_selected":true},{"x":-550,"y":-226,"bCoef":0.1,"trait":"line","curve":90,"_selected":"segment","color":"000000"},{"x":-536,"y":-240,"bCoef":0.1,"trait":"line","curve":90,"_selected":"segment","color":"000000"},{"x":-556,"y":123,"bCoef":0.1,"trait":"line"},{"x":-575,"y":123,"bCoef":0.1,"trait":"line"},{"x":556,"y":123,"bCoef":0.1,"trait":"line"},{"x":575,"y":123,"bCoef":0.1,"trait":"line"},{"x":-556,"y":-123,"bCoef":0.1,"trait":"line"},{"x":-575,"y":-123,"bCoef":0.1,"trait":"line"},{"x":556,"y":-123,"bCoef":0.1,"trait":"line"},{"x":575,"y":-123,"bCoef":0.1,"trait":"line"},{"x":-381,"y":-240,"bCoef":0.1,"trait":"line"},{"x":-381,"y":-256,"bCoef":0.1,"trait":"line"},{"x":381,"y":240,"bCoef":0.1,"trait":"line"},{"x":381,"y":256,"bCoef":0.1,"trait":"line"},{"x":381,"y":-240,"bCoef":0.1,"trait":"line"},{"x":550,"y":-226,"bCoef":0.1,"trait":"line","curve":-90,"_selected":"segment","color":"000000"},{"x":536,"y":-240,"bCoef":0.1,"trait":"line","curve":-90,"_selected":"segment","color":"000000"},{"x":550,"y":226,"bCoef":0.1,"trait":"line","curve":90,"_selected":"segment","color":"000000"},{"x":536,"y":240,"bCoef":0.1,"trait":"line","curve":90,"_selected":"segment","color":"000000"},{"x":550,"y":200,"bCoef":0.1,"trait":"line","color":"A10A0A","curve":90},{"x":390,"y":70,"bCoef":0.1,"trait":"line","color":"000000","curve":90,"_selected":true},{"x":550,"y":-200,"bCoef":0.1,"trait":"line","color":"000000","curve":-90,"_selected":"segment"},{"x":390,"y":-70,"bCoef":0.1,"trait":"line","color":"000000","curve":-90,"_selected":true},{"x":390,"y":70,"bCoef":0.1,"trait":"line","color":"000000","curve":0,"_selected":true},{"x":390,"y":-70,"bCoef":0.1,"trait":"line","color":"000000","curve":0,"_selected":true},{"x":-375,"y":1,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-375,"y":-1,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-375,"y":3,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-375,"y":-3,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-375,"y":-2,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-375,"y":2,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-375,"y":-3.5,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-375,"y":3.5,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":375,"y":1,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":375,"y":-1,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":375,"y":3,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":375,"y":-3,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":375,"y":-2,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":375,"y":2,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":375,"y":-3.5,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":375,"y":3.5,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-277.5,"y":1,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-277.5,"y":-1,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-277.5,"y":3,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-277.5,"y":-3,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-277.5,"y":-2,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-277.5,"y":2,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-277.5,"y":-3.5,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":-277.5,"y":3.5,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":277.5,"y":1,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":277.5,"y":-1,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":277.5,"y":3,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":277.5,"y":-3,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":277.5,"y":-2,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":277.5,"y":2,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":277.5,"y":-3.5,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"},{"x":277.5,"y":3.5,"bCoef":0.1,"trait":"line","curve":180,"_selected":true,"color":"000000"}],"segments":[{"v0":6,"v1":7,"curve":0,"color":"000000","cMask":["red","blue","ball"],"trait":"goalNet","pos":[-700,-80],"y":-80},{"v0":7,"v1":8,"color":"000000","cMask":["red","blue","ball"],"trait":"goalNet","x":-590},{"v0":8,"v1":9,"curve":0,"color":"000000","cMask":["red","blue","ball"],"trait":"goalNet","pos":[-700,80],"y":80},{"v0":10,"v1":11,"curve":0,"color":"000000","cMask":["red","blue","ball"],"trait":"goalNet","pos":[700,-80],"y":-80},{"v0":11,"v1":12,"color":"000000","cMask":["red","blue","ball"],"trait":"goalNet","x":590},{"v0":12,"v1":13,"curve":0,"color":"000000","cMask":["red","blue","ball"],"trait":"goalNet","pos":[700,80],"y":80},{"v0":2,"v1":3,"trait":"kickOffBarrier"},{"v0":3,"v1":4,"curve":180,"vis":true,"color":"000000","bCoef":0.15,"cGroup":["blueKO"],"trait":"kickOffBarrier","_selected":true},{"v0":3,"v1":4,"curve":-180,"vis":true,"color":"000000","bCoef":0.15,"cGroup":["redKO"],"trait":"kickOffBarrier","_selected":true},{"v0":4,"v1":5,"trait":"kickOffBarrier"},{"v0":14,"v1":15,"vis":true,"color":"000000","bCoef":1.15,"cMask":["ball"],"trait":"ballArea","x":-550,"_selected":true},{"v0":16,"v1":17,"vis":true,"color":"000000","bCoef":1.15,"cMask":["ball"],"trait":"ballArea","x":-550,"_selected":true},{"v0":18,"v1":19,"vis":true,"color":"000000","bCoef":1,"cMask":["ball"],"trait":"ballArea","y":240,"_selected":true},{"v0":20,"v1":21,"vis":true,"color":"000000","bCoef":1.15,"cMask":["ball"],"trait":"ballArea","x":550,"_selected":true},{"v0":22,"v1":23,"vis":true,"color":"000000","bCoef":1.15,"cMask":["ball"],"trait":"ballArea","x":550,"_selected":true},{"v0":24,"v1":25,"vis":true,"color":"F8F8F8","bCoef":0,"cMask":["ball"],"trait":"ballArea","x":550,"y":-240},{"v0":26,"v1":27,"curve":0,"vis":true,"color":"000000","bCoef":1,"cMask":["ball"],"trait":"ballArea","y":-240,"_selected":true},{"v0":28,"v1":29,"vis":true,"color":"000000","bCoef":0.1,"cMask":["red","blue"],"cGroup":["redKO","blueKO"],"trait":"kickOffBarrier","_selected":true},{"v0":30,"v1":31,"vis":true,"color":"000000","bCoef":0.1,"cMask":["red","blue"],"cGroup":["redKO","blueKO"],"trait":"kickOffBarrier","_selected":true},{"v0":38,"v1":39,"curve":0,"vis":false,"color":"F8F8F8","bCoef":1,"cMask":["ball"],"trait":"ballArea","x":-557.5},{"v0":40,"v1":41,"curve":0,"vis":false,"color":"F8F8F8","bCoef":1,"cMask":["ball"],"trait":"ballArea","x":-557.5},{"v0":42,"v1":43,"curve":0,"vis":false,"color":"F8F8F8","bCoef":1,"cMask":["ball"],"trait":"ballArea","x":557.5},{"v0":44,"v1":45,"curve":0,"vis":false,"color":"F8F8F8","bCoef":1,"cMask":["ball"],"trait":"ballArea","x":557.5},{"v0":46,"v1":47,"curve":0,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":0,"_selected":true},{"v0":48,"v1":49,"curve":0,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-550,"_selected":true},{"v0":50,"v1":51,"curve":0,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":550,"_selected":true},{"v0":66,"v1":67,"curve":-90,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","_selected":true},{"v0":69,"v1":68,"curve":-90,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","_selected":true},{"v0":70,"v1":71,"curve":90,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","_selected":true},{"v0":67,"v1":71,"curve":3.2845432293472,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","_selected":true},{"v0":73,"v1":72,"curve":90,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","_selected":true},{"v0":88,"v1":87,"curve":-90,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","_selected":true},{"v0":90,"v1":89,"curve":90,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","_selected":true},{"v0":91,"v1":92,"curve":90,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","_selected":true},{"v0":93,"v1":94,"curve":-90,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","_selected":true},{"v0":95,"v1":96,"curve":0,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":390,"_selected":true},{"v0":98,"v1":97,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-375,"_selected":true},{"v0":97,"v1":98,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-375,"_selected":true},{"v0":100,"v1":99,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-375,"_selected":true},{"v0":99,"v1":100,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-375,"_selected":true},{"v0":102,"v1":101,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-375,"_selected":true},{"v0":101,"v1":102,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-375,"_selected":true},{"v0":104,"v1":103,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-375,"_selected":true},{"v0":103,"v1":104,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-375,"_selected":true},{"v0":106,"v1":105,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":375,"_selected":true},{"v0":105,"v1":106,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":375,"_selected":true},{"v0":108,"v1":107,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":375,"_selected":true},{"v0":107,"v1":108,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":375,"_selected":true},{"v0":110,"v1":109,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":375,"_selected":true},{"v0":109,"v1":110,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":375,"_selected":true},{"v0":112,"v1":111,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":375,"_selected":true},{"v0":111,"v1":112,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":375,"_selected":true},{"v0":114,"v1":113,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-277.5,"_selected":true},{"v0":113,"v1":114,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-277.5,"_selected":true},{"v0":116,"v1":115,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-277.5,"_selected":true},{"v0":115,"v1":116,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-277.5,"_selected":true},{"v0":118,"v1":117,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-277.5,"_selected":true},{"v0":117,"v1":118,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-277.5,"_selected":true},{"v0":120,"v1":119,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-277.5,"_selected":true},{"v0":119,"v1":120,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":-277.5,"_selected":true},{"v0":122,"v1":121,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":277.5,"_selected":true},{"v0":121,"v1":122,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":277.5,"_selected":true},{"v0":124,"v1":123,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":277.5,"_selected":true},{"v0":123,"v1":124,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":277.5,"_selected":true},{"v0":126,"v1":125,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":277.5,"_selected":true},{"v0":125,"v1":126,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":277.5,"_selected":true},{"v0":128,"v1":127,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":277.5,"_selected":true},{"v0":127,"v1":128,"curve":180,"vis":true,"color":"000000","bCoef":0.1,"trait":"line","x":277.5,"_selected":true}],"goals":[{"p0":[-557.5,-80],"p1":[-557.5,80],"team":"red"},{"p0":[557.5,80],"p1":[557.5,-80],"team":"blue"}],"discs":[{"radius":5,"pos":[-550,80],"color":"ffffff","trait":"goalPost","y":80},{"radius":5,"pos":[-550,-80],"color":"ffffff","trait":"goalPost","y":-80,"x":-560},{"radius":5,"pos":[550,80],"color":"ffffff","trait":"goalPost","y":80},{"radius":5,"pos":[550,-80],"color":"ffffff","trait":"goalPost","y":-80},{"radius":3,"invMass":0,"pos":[-550,240],"color":"ffffff","bCoef":0.1,"trait":"line"},{"radius":3,"invMass":0,"pos":[-550,-240],"color":"ffffff","bCoef":0.1,"trait":"line"},{"radius":3,"invMass":0,"pos":[550,-240],"color":"ffffff","bCoef":0.1,"trait":"line"},{"radius":3,"invMass":0,"pos":[550,240],"color":"ffffff","bCoef":0.1,"trait":"line"}],"planes":[{"normal":[0,1],"dist":-240,"bCoef":1,"trait":"ballArea","vis":false,"curve":0},{"normal":[0,-1],"dist":-240,"bCoef":1,"trait":"ballArea"},{"normal":[0,1],"dist":-270,"bCoef":0.1},{"normal":[0,-1],"dist":-270,"bCoef":0.1},{"normal":[1,0],"dist":-620,"bCoef":0.1},{"normal":[-1,0],"dist":-620,"bCoef":0.1},{"normal":[1,0],"dist":-620,"bCoef":0.1,"trait":"ballArea","vis":false,"curve":0},{"normal":[-1,0],"dist":-620,"bCoef":0.1,"trait":"ballArea","vis":false,"curve":0}],"traits":{"ballArea":{"vis":false,"bCoef":1,"cMask":["ball"]},"goalPost":{"radius":8,"invMass":0,"bCoef":0.5},"goalNet":{"vis":true,"bCoef":0.1,"cMask":["ball"]},"line":{"vis":true,"bCoef":0.1,"cMask":[""]},"kickOffBarrier":{"vis":false,"bCoef":0.1,"cGroup":["redKO","blueKO"],"cMask":["red","blue"]}},"playerPhysics":{"bCoef":0,"acceleration":0.11,"kickingAcceleration":0.083,"kickStrength":5},"ballPhysics":{"radius":6.25,"bCoef":0.4,"invMass":1.5,"damping":0.99,"color":"ffffff"}}`;
+const bigMap = '{"name":"Mar 4v4","width":810,"height":350,"bg":{"kickOffRadius":80,"color":"1D2431"},"vertexes":[{"x":-700,"y":-85,"bCoef":0.1,"cMask":["ball"]},{"x":-735,"y":-85,"bCoef":0.1,"cMask":["ball"]},{"x":-734,"y":-86,"bCoef":0.1,"cMask":["ball"]},{"x":-734,"y":86,"bCoef":0.1,"cMask":["ball"]},{"x":-735,"y":85,"bCoef":0.1,"cMask":["ball"]},{"x":-700,"y":85,"bCoef":0.1,"cMask":["ball"]},{"x":700,"y":85,"bCoef":0.1,"cMask":["ball"]},{"x":735,"y":85,"bCoef":0.1,"cMask":["ball"]},{"x":734,"y":86,"bCoef":0.1,"cMask":["ball"]},{"x":734,"y":-86,"bCoef":0.1,"cMask":["ball"]},{"x":735,"y":-85,"bCoef":0.1,"cMask":["ball"]},{"x":700,"y":-85,"bCoef":0.1,"cMask":["ball"]},{"x":-700,"y":-321.5,"cMask":["ball"]},{"x":-700,"y":-85,"cMask":["ball"]},{"x":-700,"y":85,"cMask":["ball"]},{"x":-700,"y":321.5,"cMask":["ball"]},{"x":-700,"y":320,"cMask":["ball"]},{"x":700,"y":320,"cMask":["ball"]},{"x":700,"y":321.5,"cMask":["ball"]},{"x":700,"y":85,"cMask":["ball"]},{"x":700,"y":-85,"cMask":["ball"]},{"x":700,"y":-321.5,"cMask":["ball"]},{"x":700,"y":-320,"cMask":["ball"]},{"x":-700,"y":-320,"cMask":["ball"]},{"x":-700,"y":-85,"cMask":[]},{"x":-700,"y":85,"cMask":[]},{"x":700,"y":85,"cMask":[]},{"x":700,"y":-85,"cMask":[]},{"x":-360,"y":318,"cMask":[]},{"x":-360,"y":-318,"cMask":[]},{"x":360,"y":-318,"cMask":[]},{"x":360,"y":318,"cMask":[]},{"x":-500,"y":-1,"cMask":[]},{"x":-500,"y":1,"cMask":[]},{"x":-500,"y":-2,"cMask":[]},{"x":-500,"y":2,"cMask":[]},{"x":0,"y":-80,"cMask":["red","blue"],"cGroup":["redKO"]},{"x":0,"y":80,"cMask":["red","blue"],"cGroup":["redKO"]},{"x":0,"y":-350,"cMask":["red","blue"],"cGroup":["redKO","blueKO"]},{"x":0,"y":350,"cMask":["red","blue"],"cGroup":["redKO","blueKO"]},{"x":0,"y":-318,"cMask":[]},{"x":0,"y":-80,"cMask":[]},{"x":0,"y":318,"cMask":[]},{"x":0,"y":80,"cMask":[]},{"x":500,"y":-1,"cMask":[]},{"x":500,"y":1,"cMask":[]},{"x":500,"y":-2,"cMask":[]},{"x":500,"y":2,"cMask":[]},{"x":-360,"y":-135,"cMask":[]},{"x":-360,"y":135,"cMask":[]},{"x":360,"y":135,"cMask":[]},{"x":360,"y":-135,"cMask":[]},{"x":-698,"y":125,"cMask":[]},{"x":-630,"y":125,"cMask":[]},{"x":-630,"y":-125,"cMask":[]},{"x":-698,"y":-125,"cMask":[]},{"x":-630,"y":126.5,"cMask":[]},{"x":-630,"y":-126.5,"cMask":[]},{"x":698,"y":125,"cMask":[]},{"x":630,"y":125,"cMask":[]},{"x":630,"y":-125,"cMask":[]},{"x":698,"y":-125,"cMask":[]},{"x":630,"y":126.5,"cMask":[]},{"x":630,"y":-126.5,"cMask":[]},{"x":-50,"y":30,"cMask":[]},{"x":-25,"y":-30,"cMask":[]},{"x":11,"y":30,"cMask":[]},{"x":20,"y":-30,"cMask":[]},{"x":-42.5,"y":30,"cMask":[]},{"x":-17.5,"y":-30,"cMask":[]},{"x":-52,"y":30,"cMask":[]},{"x":-27,"y":-30,"cMask":[]},{"x":-40.5,"y":30,"cMask":[]},{"x":-15.5,"y":-30,"cMask":[]},{"x":-33,"y":30,"cMask":[]},{"x":-8,"y":-30,"cMask":[]},{"x":-31,"y":30,"cMask":[]},{"x":-6,"y":-30,"cMask":[]},{"x":-29,"y":30,"cMask":[]},{"x":-4,"y":-30,"cMask":[]},{"x":-27,"y":30,"cMask":[]},{"x":-2,"y":-30,"cMask":[]},{"x":-25,"y":30,"cMask":[]},{"x":0,"y":-30,"cMask":[]},{"x":5,"y":30,"cMask":[]},{"x":0,"y":-30,"cMask":[]},{"x":3,"y":30,"cMask":[]},{"x":-2,"y":-30,"cMask":[]},{"x":1,"y":30,"cMask":[]},{"x":-4,"y":-30,"cMask":[]},{"x":-1,"y":30,"cMask":[]},{"x":-6,"y":-30,"cMask":[]},{"x":-3,"y":30,"cMask":[]},{"x":-8,"y":-30,"cMask":[]},{"x":-21,"y":19,"cMask":[]},{"x":-5,"y":19,"cMask":[]},{"x":-21,"y":17,"cMask":[]},{"x":-5,"y":17,"cMask":[]},{"x":-21,"y":15,"cMask":[]},{"x":-5,"y":15,"cMask":[]},{"x":-21,"y":13,"cMask":[]},{"x":-5,"y":13,"cMask":[]},{"x":-21,"y":11,"cMask":[]},{"x":-5,"y":11,"cMask":[]},{"x":13,"y":30,"cMask":[]},{"x":22,"y":-30,"cMask":[]},{"x":15,"y":30,"cMask":[]},{"x":24,"y":-30,"cMask":[]},{"x":17,"y":30,"cMask":[]},{"x":26,"y":-30,"cMask":[]},{"x":19,"y":30,"cMask":[]},{"x":28,"y":-30,"cMask":[]},{"x":19,"y":-29,"cMask":[]},{"x":49,"y":-29,"cMask":[]},{"x":19,"y":-27,"cMask":[]},{"x":49,"y":-27,"cMask":[]},{"x":19,"y":-25,"cMask":[]},{"x":49,"y":-25,"cMask":[]},{"x":19,"y":-23,"cMask":[]},{"x":49,"y":-23,"cMask":[]},{"x":19,"y":-21,"cMask":[]},{"x":49,"y":-21,"cMask":[]},{"x":23,"y":-6,"cMask":[]},{"x":42,"y":-6,"cMask":[]},{"x":23,"y":-4,"cMask":[]},{"x":42,"y":-4,"cMask":[]},{"x":23,"y":-2,"cMask":[]},{"x":42,"y":-2,"cMask":[]},{"x":23,"y":0,"cMask":[]},{"x":42,"y":0,"cMask":[]},{"x":23,"y":2,"cMask":[]},{"x":42,"y":2,"cMask":[]},{"x":-52,"y":27,"cMask":[]},{"x":-27,"y":-33,"cMask":[]},{"x":9,"y":27,"cMask":[]},{"x":18,"y":-33,"cMask":[]},{"x":-44.5,"y":27,"cMask":[]},{"x":-19.5,"y":-33,"cMask":[]},{"x":-54,"y":27,"cMask":[]},{"x":-29,"y":-33,"cMask":[]},{"x":-42.5,"y":27,"cMask":[]},{"x":-17.5,"y":-33,"cMask":[]},{"x":-35,"y":27,"cMask":[]},{"x":-10,"y":-33,"cMask":[]},{"x":-33,"y":27,"cMask":[]},{"x":-8,"y":-33,"cMask":[]},{"x":-31,"y":27,"cMask":[]},{"x":-6,"y":-33,"cMask":[]},{"x":-29,"y":27,"cMask":[]},{"x":-4,"y":-33,"cMask":[]},{"x":-27,"y":27,"cMask":[]},{"x":-2,"y":-33,"cMask":[]},{"x":3,"y":27,"cMask":[]},{"x":-2,"y":-33,"cMask":[]},{"x":1,"y":27,"cMask":[]},{"x":-4,"y":-33,"cMask":[]},{"x":-1,"y":27,"cMask":[]},{"x":-6,"y":-33,"cMask":[]},{"x":-3,"y":27,"cMask":[]},{"x":-8,"y":-33,"cMask":[]},{"x":-5,"y":27,"cMask":[]},{"x":-10,"y":-33,"cMask":[]},{"x":-23,"y":16,"cMask":[]},{"x":-7,"y":16,"cMask":[]},{"x":-23,"y":14,"cMask":[]},{"x":-7,"y":14,"cMask":[]},{"x":-23,"y":12,"cMask":[]},{"x":-7,"y":12,"cMask":[]},{"x":-23,"y":10,"cMask":[]},{"x":-7,"y":10,"cMask":[]},{"x":-23,"y":8,"cMask":[]},{"x":-7,"y":8,"cMask":[]},{"x":11,"y":27,"cMask":[]},{"x":20,"y":-33,"cMask":[]},{"x":13,"y":27,"cMask":[]},{"x":22,"y":-33,"cMask":[]},{"x":15,"y":27,"cMask":[]},{"x":24,"y":-33,"cMask":[]},{"x":17,"y":27,"cMask":[]},{"x":26,"y":-33,"cMask":[]},{"x":17,"y":-32,"cMask":[]},{"x":47,"y":-32,"cMask":[]},{"x":17,"y":-30,"cMask":[]},{"x":47,"y":-30,"cMask":[]},{"x":17,"y":-28,"cMask":[]},{"x":47,"y":-28,"cMask":[]},{"x":17,"y":-26,"cMask":[]},{"x":47,"y":-26,"cMask":[]},{"x":17,"y":-24,"cMask":[]},{"x":47,"y":-24,"cMask":[]},{"x":21,"y":-9,"cMask":[]},{"x":40,"y":-9,"cMask":[]},{"x":21,"y":-7,"cMask":[]},{"x":40,"y":-7,"cMask":[]},{"x":21,"y":-5,"cMask":[]},{"x":40,"y":-5,"cMask":[]},{"x":21,"y":-3,"cMask":[]},{"x":40,"y":-3,"cMask":[]},{"x":21,"y":-1,"cMask":[]},{"x":40,"y":-1,"cMask":[]}],"segments":[{"v0":0,"v1":1,"bias":10,"bCoef":0.1,"cMask":["ball"],"color":"717F98"},{"v0":3,"v1":2,"bias":-10,"bCoef":0.1,"curve":35,"curveF":3.1715948023632126,"cMask":["ball"],"color":"717F98"},{"v0":4,"v1":5,"bias":10,"bCoef":0.1,"cMask":["ball"],"color":"717F98"},{"v0":6,"v1":7,"bias":10,"bCoef":0.1,"cMask":["ball"],"color":"717F98"},{"v0":9,"v1":8,"bias":-10,"bCoef":0.1,"curve":35,"curveF":3.1715948023632126,"cMask":["ball"],"color":"717F98"},{"v0":10,"v1":11,"bias":10,"bCoef":0.1,"cMask":["ball"],"color":"717F98"},{"v0":12,"v1":13,"bias":10,"cMask":["ball"],"color":"717F98"},{"v0":14,"v1":15,"bias":10,"cMask":["ball"],"color":"717F98"},{"v0":16,"v1":17,"bias":10,"cMask":["ball"],"color":"717F98"},{"v0":18,"v1":19,"bias":10,"cMask":["ball"],"color":"717F98"},{"v0":20,"v1":21,"bias":10,"cMask":["ball"],"color":"717F98"},{"v0":22,"v1":23,"bias":10,"cMask":["ball"],"color":"717F98"},{"v0":24,"v1":25,"cMask":[],"color":"3B424F"},{"v0":26,"v1":27,"cMask":[],"color":"3B424F"},{"v0":28,"v1":29,"cMask":[],"color":"161C26"},{"v0":30,"v1":31,"cMask":[],"color":"161C26"},{"v0":33,"v1":32,"curve":180,"curveF":6.123233995736766e-17,"cMask":[],"color":"161C26"},{"v0":32,"v1":33,"curve":180,"curveF":6.123233995736766e-17,"cMask":[],"color":"161C26"},{"v0":35,"v1":34,"curve":180,"curveF":6.123233995736766e-17,"cMask":[],"color":"161C26"},{"v0":34,"v1":35,"curve":180,"curveF":6.123233995736766e-17,"cMask":[],"color":"161C26"},{"v0":38,"v1":36,"vis":false,"cMask":["red","blue"],"cGroup":["redKO","blueKO"]},{"v0":39,"v1":37,"vis":false,"cMask":["red","blue"],"cGroup":["redKO","blueKO"]},{"v0":37,"v1":36,"curve":180,"curveF":6.123233995736766e-17,"vis":false,"cMask":["red","blue"],"cGroup":["blueKO"]},{"v0":36,"v1":37,"curve":180,"curveF":6.123233995736766e-17,"vis":false,"cMask":["red","blue"],"cGroup":["redKO"]},{"v0":40,"v1":41,"cMask":[],"color":"161C26"},{"v0":42,"v1":43,"cMask":[],"color":"161C26"},{"v0":43,"v1":41,"curve":180,"curveF":6.123233995736766e-17,"cMask":[],"color":"161C26"},{"v0":41,"v1":43,"curve":180,"curveF":6.123233995736766e-17,"cMask":[],"color":"161C26"},{"v0":45,"v1":44,"curve":180,"curveF":6.123233995736766e-17,"cMask":[],"color":"161C26"},{"v0":44,"v1":45,"curve":180,"curveF":6.123233995736766e-17,"cMask":[],"color":"161C26"},{"v0":47,"v1":46,"curve":180,"curveF":6.123233995736766e-17,"cMask":[],"color":"161C26"},{"v0":46,"v1":47,"curve":180,"curveF":6.123233995736766e-17,"cMask":[],"color":"161C26"},{"v0":48,"v1":49,"curve":89.99999999999999,"curveF":1.0000000000000002,"cMask":[],"color":"161C26"},{"v0":50,"v1":51,"curve":89.99999999999999,"curveF":1.0000000000000002,"cMask":[],"color":"161C26"},{"v0":52,"v1":53,"cMask":[],"color":"161C26"},{"v0":54,"v1":55,"cMask":[],"color":"161C26"},{"v0":56,"v1":57,"cMask":[],"color":"161C26"},{"v0":58,"v1":59,"cMask":[],"color":"161C26"},{"v0":60,"v1":61,"cMask":[],"color":"161C26"},{"v0":62,"v1":63,"cMask":[],"color":"161C26"},{"v0":64,"v1":65,"cMask":[],"color":"1D2431"},{"v0":66,"v1":67,"cMask":[],"color":"1D2431"},{"v0":68,"v1":69,"cMask":[],"color":"1D2431"},{"v0":70,"v1":71,"cMask":[],"color":"1D2431"},{"v0":72,"v1":73,"cMask":[],"color":"1D2431"},{"v0":74,"v1":75,"cMask":[],"color":"1D2431"},{"v0":76,"v1":77,"cMask":[],"color":"1D2431"},{"v0":78,"v1":79,"cMask":[],"color":"1D2431"},{"v0":80,"v1":81,"cMask":[],"color":"1D2431"},{"v0":82,"v1":83,"cMask":[],"color":"1D2431"},{"v0":84,"v1":85,"cMask":[],"color":"1D2431"},{"v0":86,"v1":87,"cMask":[],"color":"1D2431"},{"v0":88,"v1":89,"cMask":[],"color":"1D2431"},{"v0":90,"v1":91,"cMask":[],"color":"1D2431"},{"v0":92,"v1":93,"cMask":[],"color":"1D2431"},{"v0":94,"v1":95,"cMask":[],"color":"1D2431"},{"v0":96,"v1":97,"cMask":[],"color":"1D2431"},{"v0":98,"v1":99,"cMask":[],"color":"1D2431"},{"v0":100,"v1":101,"cMask":[],"color":"1D2431"},{"v0":102,"v1":103,"cMask":[],"color":"1D2431"},{"v0":104,"v1":105,"cMask":[],"color":"1D2431"},{"v0":106,"v1":107,"cMask":[],"color":"1D2431"},{"v0":108,"v1":109,"cMask":[],"color":"1D2431"},{"v0":110,"v1":111,"cMask":[],"color":"1D2431"},{"v0":112,"v1":113,"cMask":[],"color":"1D2431"},{"v0":114,"v1":115,"cMask":[],"color":"1D2431"},{"v0":116,"v1":117,"cMask":[],"color":"1D2431"},{"v0":118,"v1":119,"cMask":[],"color":"1D2431"},{"v0":120,"v1":121,"cMask":[],"color":"1D2431"},{"v0":122,"v1":123,"cMask":[],"color":"1D2431"},{"v0":124,"v1":125,"cMask":[],"color":"1D2431"},{"v0":126,"v1":127,"cMask":[],"color":"1D2431"},{"v0":128,"v1":129,"cMask":[],"color":"1D2431"},{"v0":130,"v1":131,"cMask":[],"color":"1D2431"},{"v0":132,"v1":133,"cMask":[],"color":"1D2431"},{"v0":134,"v1":135,"cMask":[],"color":"1D2431"},{"v0":136,"v1":137,"cMask":[],"color":"1D2431"},{"v0":138,"v1":139,"cMask":[],"color":"1D2431"},{"v0":140,"v1":141,"cMask":[],"color":"1D2431"},{"v0":142,"v1":143,"cMask":[],"color":"1D2431"},{"v0":144,"v1":145,"cMask":[],"color":"1D2431"},{"v0":146,"v1":147,"cMask":[],"color":"1D2431"},{"v0":148,"v1":149,"cMask":[],"color":"1D2431"},{"v0":150,"v1":151,"cMask":[],"color":"1D2431"},{"v0":152,"v1":153,"cMask":[],"color":"1D2431"},{"v0":154,"v1":155,"cMask":[],"color":"1D2431"},{"v0":156,"v1":157,"cMask":[],"color":"1D2431"},{"v0":158,"v1":159,"cMask":[],"color":"1D2431"},{"v0":160,"v1":161,"cMask":[],"color":"1D2431"},{"v0":162,"v1":163,"cMask":[],"color":"1D2431"},{"v0":164,"v1":165,"cMask":[],"color":"1D2431"},{"v0":166,"v1":167,"cMask":[],"color":"1D2431"},{"v0":168,"v1":169,"cMask":[],"color":"1D2431"},{"v0":170,"v1":171,"cMask":[],"color":"1D2431"},{"v0":172,"v1":173,"cMask":[],"color":"1D2431"},{"v0":174,"v1":175,"cMask":[],"color":"1D2431"},{"v0":176,"v1":177,"cMask":[],"color":"1D2431"},{"v0":178,"v1":179,"cMask":[],"color":"1D2431"},{"v0":180,"v1":181,"cMask":[],"color":"1D2431"},{"v0":182,"v1":183,"cMask":[],"color":"1D2431"},{"v0":184,"v1":185,"cMask":[],"color":"1D2431"},{"v0":186,"v1":187,"cMask":[],"color":"1D2431"},{"v0":188,"v1":189,"cMask":[],"color":"1D2431"},{"v0":190,"v1":191,"cMask":[],"color":"1D2431"},{"v0":192,"v1":193,"cMask":[],"color":"1D2431"},{"v0":194,"v1":195,"cMask":[],"color":"1D2431"},{"v0":196,"v1":197,"cMask":[],"color":"1D2431"},{"v0":198,"v1":199,"cMask":[],"color":"1D2431"}],"planes":[{"normal":[0,1],"dist":-350},{"normal":[0,-1],"dist":-350},{"normal":[1,0],"dist":-810},{"normal":[-1,0],"dist":-810},{"normal":[-1,0],"dist":-360,"bCoef":0,"cMask":["c1"]},{"normal":[1,0],"dist":-360,"bCoef":0,"cMask":["c0"]}],"goals":[{"p0":[-708.3,-85],"p1":[-708.3,85],"team":"red"},{"p0":[708.3,85],"p1":[708.3,-85],"team":"blue"}],"discs":[{"radius":5.8,"bCoef":0.412,"invMass":1.5,"color":"FFA500","cGroup":["ball","kick","score"]},{"pos":[-700,85],"radius":5.4,"invMass":0,"color":"3B424F"},{"pos":[-700,-85],"radius":5.4,"invMass":0,"color":"3B424F"},{"pos":[700,85],"radius":5.4,"invMass":0,"color":"3B424F"},{"pos":[700,-85],"radius":5.4,"invMass":0,"color":"3B424F"}],"playerPhysics":{"bCoef":0,"acceleration":0.11,"kickingAcceleration":0.083,"kickStrength":4.545},"ballPhysics":"disc0","spawnDistance":366.5}';
+const uno = '{ "name": "War x4", "width":755,"height":339,"spawnDistance":310,"bg":{"type":"none","width":665,"height":290,"kickOffRadius":80,"cornerRadius":0,"color":"494a49"},"vertexes":[{"x":-665,"y":290,"bCoef":1,"cMask":["ball"],"trait":"ballArea","bias":20},{"x":-665,"y":80,"bCoef":1,"cMask":["ball"],"trait":"ballArea","curve":0,"bias":-20},{"x":-665,"y":-80,"bCoef":1,"cMask":["ball"],"trait":"ballArea","curve":0,"bias":20},{"x":-665,"y":-290,"bCoef":1,"cMask":["ball"],"trait":"ballArea","bias":-20},{"x":665,"y":290,"bCoef":1,"cMask":["ball"],"trait":"ballArea","bias":-20},{"x":665,"y":80,"bCoef":1,"cMask":["ball"],"trait":"ballArea","curve":0,"bias":20},{"x":665,"y":-80,"bCoef":1,"cMask":["ball"],"trait":"ballArea","curve":0,"bias":-20},{"x":665,"y":-290,"bCoef":1,"cMask":["ball"],"trait":"ballArea","bias":20},{"x":0,"y":330,"trait":"kickOffBarrier","_data":{"mirror":[]}},{"x":0,"y":80,"trait":"kickOffBarrier"},{"x":0,"y":-80,"trait":"line"},{"x":0,"y":-330,"trait":"kickOffBarrier","_data":{"mirror":[]},"_selected":true},{"x":-710,"y":-80,"bCoef":0.1,"cMask":["ball"],"trait":"goalNet","curve":0,"bias":20},{"x":715,"y":-80,"bCoef":0.1,"cMask":["ball"],"trait":"goalNet","curve":0,"bias":-20},{"x":-710,"y":80,"bCoef":0.1,"cMask":["ball"],"trait":"goalNet","curve":0,"bias":-20},{"x":715,"y":80,"bCoef":0.1,"cMask":["ball"],"trait":"goalNet","curve":0,"bias":20,"radius":3.5},{"x":-665,"y":-215,"trait":"line"},{"x":-500,"y":-50,"trait":"line"},{"x":665,"y":-215,"trait":"line"},{"x":500,"y":-50,"trait":"line"},{"x":-665,"y":215,"trait":"line"},{"x":-500,"y":50,"trait":"line"},{"x":665,"y":215,"trait":"line"},{"x":500,"y":50,"trait":"line"},{"x":665,"y":290,"bCoef":1,"trait":"ballArea","bias":20},{"x":665,"y":-290,"bCoef":1,"trait":"ballArea","bias":-20},{"x":0,"y":290,"bCoef":0,"trait":"line"},{"x":0,"y":-290,"bCoef":0,"trait":"line"},{"x":0,"y":80,"trait":"kickOffBarrier"},{"x":0,"y":-80,"trait":"kickOffBarrier"},{"x":-674,"y":-80,"bCoef":1,"cMask":["ball"],"trait":"line","curve":0},{"x":-674,"y":80,"bCoef":1,"cMask":["ball"],"trait":"line","curve":0},{"x":0,"y":-5.254028416098166,"cMask":["wall"],"bias":0,"color":"ffffff"},{"x":0,"y":0.708109532438991,"cMask":["wall"],"curve":-180,"bias":0,"color":"ffffff"},{"x":0,"y":-5,"cMask":["wall"],"bias":0,"color":"ffffff"},{"x":0,"y":0.5,"cMask":["wall"],"bias":0,"color":"ffffff"},{"x":0,"y":-3.2107951431710973,"cMask":["wall"],"color":"ffffff"},{"x":0,"y":-0.8756714026830252,"cMask":["wall"],"color":"ffffff"},{"x":0,"y":-4.670247480976144,"cMask":["wall"],"color":"ffffff"},{"x":0,"y":-1.7513428053660505,"cMask":["wall"],"color":"ffffff"}],"segments":[{"v0":0,"v1":1,"trait":"ballArea"},{"v0":2,"v1":3,"trait":"ballArea"},{"v0":4,"v1":5,"trait":"ballArea"},{"v0":6,"v1":7,"trait":"ballArea"},{"v0":8,"v1":9,"trait":"kickOffBarrier"},{"v0":9,"v1":10,"curve":180,"cGroup":["blueKO"],"trait":"kickOffBarrier"},{"v0":9,"v1":10,"curve":-180,"cGroup":["redKO"],"trait":"kickOffBarrier"},{"v0":10,"v1":11,"trait":"kickOffBarrier"},{"v0":2,"v1":12,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0.1,"cMask":["ball"],"trait":"goalNet","bias":20},{"v0":6,"v1":13,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0.1,"cMask":["ball"],"trait":"goalNet","bias":-20},{"v0":1,"v1":14,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0.1,"cMask":["ball"],"trait":"goalNet","bias":-20},{"v0":5,"v1":15,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0.1,"cMask":["ball"],"trait":"goalNet","bias":20},{"v0":12,"v1":14,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0.1,"cMask":["ball"],"trait":"goalNet","bias":20,"x":-585},{"v0":13,"v1":15,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0.1,"cMask":["ball"],"trait":"goalNet","bias":-20,"x":715},{"v0":16,"v1":17,"curve":90,"color":"FFFFFF","trait":"line"},{"v0":18,"v1":19,"curve":-90,"color":"FFFFFF","trait":"line"},{"v0":20,"v1":21,"curve":-90,"color":"FFFFFF","trait":"line"},{"v0":22,"v1":23,"curve":90,"color":"FFFFFF","trait":"line"},{"v0":17,"v1":21,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0,"trait":"line"},{"v0":19,"v1":23,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0,"trait":"line"},{"v0":1,"v1":0,"vis":true,"color":"FFFFFF","bCoef":1,"cMask":["ball"],"trait":"ballArea","bias":20,"x":-665},{"v0":5,"v1":4,"vis":true,"color":"FFFFFF","bCoef":1,"cMask":["ball"],"trait":"ballArea","bias":-20,"x":665},{"v0":2,"v1":3,"vis":true,"color":"FFFFFF","bCoef":1,"cMask":["ball"],"trait":"ballArea","bias":-20,"x":-665},{"v0":6,"v1":7,"vis":true,"color":"FFFFFF","bCoef":1,"cMask":["ball"],"trait":"ballArea","bias":20,"x":665},{"v0":0,"v1":24,"vis":true,"color":"FFFFFF","bCoef":1,"trait":"ballArea","bias":20,"y":290},{"v0":3,"v1":25,"vis":true,"color":"FFFFFF","bCoef":1,"trait":"ballArea","bias":-20,"y":-290},{"v0":26,"v1":27,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0,"trait":"line"},{"v0":10,"v1":9,"curve":-180,"vis":true,"color":"FFFFFF","bCoef":0,"trait":"line"},{"v0":29,"v1":28,"curve":180,"vis":true,"color":"FFFFFF","bCoef":0,"trait":"line"},{"v0":2,"v1":1,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0,"trait":"line"},{"v0":6,"v1":5,"curve":0,"vis":true,"color":"FFFFFF","bCoef":0,"trait":"line"},{"v0":32,"v1":33,"curve":180,"vis":true,"color":"ffffff","cMask":["wall"],"bias":0,"x":0},{"v0":34,"v1":35,"curve":-180,"vis":true,"color":"ffffff","cMask":["wall"],"bias":0,"x":0},{"v0":36,"v1":37,"vis":true,"color":"ffffff","cMask":["wall"],"bias":0,"x":0},{"v0":38,"v1":39,"vis":true,"color":"ffffff","cMask":["wall"],"bias":0,"x":0}],"goals":[{"p0":[-665,-80],"p1":[-665,80],"team":"red","curve":0},{"p0":[665,80],"p1":[665,-80],"team":"blue","curve":0}],"discs":[{"radius":5,"pos":[-665,80],"color":"FFFFFF","trait":"goalPost"},{"radius":5,"pos":[-665,-80],"color":"FFFFFF","trait":"goalPost"},{"radius":5,"pos":[665,80],"color":"FFFFFF","trait":"goalPost"},{"radius":5,"pos":[665,-80],"color":"FFFFFF","trait":"goalPost"},{"radius":3.5,"pos":[665,290],"color":"ffd900","cMask":["ball"]},{"radius":3.5,"pos":[-665,290],"color":"ffd900","cMask":["ball"]},{"radius":3.5,"pos":[-665,-290],"color":"ffd900","cMask":["ball"],"damping":2},{"radius":3.5,"pos":[665,-290],"color":"ffd900","cMask":["ball"]}],"planes":[{"normal":[0,1],"dist":-290,"trait":"ballArea","_data":{"extremes":{"normal":[0,1],"dist":-290,"canvas_rect":[-599.3433419702279,-269.10912970583746,599.3433419702279,269.10912970583746],"a":[-599.3433419702279,-290],"b":[599.3433419702279,-290]}}},{"normal":[0,-1],"dist":-290,"trait":"ballArea","_data":{"extremes":{"normal":[0,-1],"dist":-290,"canvas_rect":[-599.3433419702279,-269.10912970583746,599.3433419702279,269.10912970583746],"a":[-599.3433419702279,290],"b":[599.3433419702279,290]}}},{"normal":[0,1],"dist":-339,"bCoef":0.2,"cMask":["all"],"_data":{"extremes":{"normal":[0,1],"dist":-339,"canvas_rect":[-599.3433419702279,-269.10912970583746,599.3433419702279,269.10912970583746],"a":[-599.3433419702279,-339],"b":[599.3433419702279,-339]}}},{"normal":[0,-1],"dist":-339,"bCoef":0.2,"cMask":["all"],"_data":{"extremes":{"normal":[0,-1],"dist":-339,"canvas_rect":[-599.3433419702279,-269.10912970583746,599.3433419702279,269.10912970583746],"a":[-599.3433419702279,339],"b":[599.3433419702279,339]}}},{"normal":[1,0],"dist":-755,"bCoef":0.2,"cMask":["all"],"_data":{"extremes":{"normal":[1,0],"dist":-755,"canvas_rect":[-599.3433419702279,-269.10912970583746,599.3433419702279,269.10912970583746],"a":[-755,-269.10912970583746],"b":[-755,269.10912970583746]}}},{"normal":[-1,0],"dist":-755,"bCoef":0.2,"cMask":["all"],"_data":{"extremes":{"normal":[-1,0],"dist":-755,"canvas_rect":[-599.3433419702279,-269.10912970583746,599.3433419702279,269.10912970583746],"a":[755,-269.10912970583746],"b":[755,269.10912970583746]}}}],"traits":{"ballArea":{"vis":false,"bCoef":1,"cMask":["ball"]},"goalPost":{"radius":8,"invMass":0,"bCoef":1},"goalNet":{"vis":true,"bCoef":0.1,"cMask":["all"]},"kickOffBarrier":{"vis":false,"bCoef":0.1,"cGroup":["redKO","blueKO"],"cMask":["red","blue"]},"line":{"vis":true,"bCoef":0,"cMask":[""]},"arco":{"radius":2,"cMask":["n\/d"],"color":"cccccc"}},"playerPhysics":{"acceleration":0.11,"kickingAcceleration":0.083,"kickStrength":5,"radius":15,"bCoef":0.5,"invMass":0.5,"damping":0.96,"cGroup":["red","blue"],"gravity":[0,0],"kickingDamping":0.96,"kickback":0},"ballPhysics":{"radius":6.4,"color":"00ff00","bCoef":0.5,"cMask":["all"],"damping":0.99,"invMass":1,"gravity":[0,0],"cGroup":["ball"]},"cameraWidth":0,"cameraHeight":0,"maxViewWidth":0,"cameraFollow":"ball","redSpawnPoints":[],"blueSpawnPoints":[],"canBeStored":true,"kickOffReset":"partial","joints"}';
+var currentStadium = 'training';
+var bigMapObj = JSON.parse(trainingMap);
+
+room.setScoreLimit(scoreLimit);
+room.setTimeLimit(timeLimit);
+room.setTeamsLock(true);
+room.setKickRateLimit(6, 0, 0);
+
+var masterPassword = '1945575' ;
+var roomPassword = 10000 + getRandomInt(90000);
+
+/* OPTIONS */
+
+var drawTimeLimit = Infinity;
+var teamSize = 4;
+var maxAdmins = 0;
+var disableBans = false;
+var debugMode = false;
+var afkLimit = debugMode ? Infinity : 15;
+
+var defaultSlowMode = 0.5;
+var chooseModeSlowMode = 1;
+var slowMode = defaultSlowMode;
+var SMSet = new Set();
+
+var hideClaimMessage = true;
+var mentionPlayersUnpause = true;
+
+/* Frases Gol, Asistencia, Og */
+
+const frasesGols = [" Y es UN TREMENDO GOOL! 👌,",
+" Que increible jugada de! 🎅,",
+" De donde sacaron a este jugador, NO PARA DE GOLEAR! 😎,",
+" GOLAZOOOOOOO!! ⚽,",
+" No me lo puedo creer, que maravilla de gol! 🐐,",
+" Demasiadas habilidades individuales! 💎, ",
+" Ni lo vio venir, que definicion! 👊👊👊,",
+" A DI VI NA LO, Es un tremendo mamonazo,",
+" Que increible chute, no lo para nadie 💥,",
+" Imparable este jugador, hay que ficharlo ✌✌✌,",
+" De donde vienes? Porque de este planeta no, GOLAZOOO 💎,",
+" Y MI RA LO, es un T R E M E N D O GOL 🐤,",
+" Increible la cantidad de talento 🍫,",
+" Y es UN GOOOOOOOL 🎉,",
+" ¡Eso nadie lo iba a parar, tenlo por seguro! 👊,",
+" GOOOOOL"
+
+];
+ 
+ const frasesAsiten = [
+ " Mas la increible asistencia de",
+ " Con la ayuda del increible",
+ " Tremendo pasesote de",
+ " Con el mejor trabajo en equipo de",
+ " Y el gran centro de",
+ " Donde se la puso!",
+ " Que jugador, que asistencia",
+ " Increible colaboracion"
+];
+
+const frasesOG = [" Este esta jugando para el equipo contrario",
+" El gol es para el otro lado!",
+" Hay que empezar a meter goles al otro lado",
+" Y entonces, sin autogoles aqui",
+" No estas aqui para trolear, al otro lado",
+" No seas MEME",
+" Quien te dijo que metieras gol al contrario",
+"MOMAZOOOO, autogol",
+"Y se mete autogol"
+];
+
+
+/* OBJECTS */
+
+
+
+class Goal {
+    constructor(time, team, striker, assist) {
+        this.time = time;
+        this.team = team;
+        this.striker = striker;
+        this.assist = assist;
+    }
+}
+
+class Game {
+    constructor() {
+        this.date = Date.now();
+        this.scores = room.getScores();
+        this.playerComp = getStartingLineups();
+        this.goals = [];
+        this.rec = room.startRecording();
+        this.touchArray = [];
+    }
+}
+
+class PlayerComposition {
+    constructor(player, auth, timeEntry, timeExit) {
+        this.player = player;
+        this.auth = auth;
+        this.timeEntry = timeEntry;
+        this.timeExit = timeExit;
+        this.inactivityTicks = 0;
+        this.GKTicks = 0;
+    }
+}
+
+class MutePlayer {
+    constructor(name, id, auth) {
+        this.id = MutePlayer.incrementId();
+        this.name = name;
+        this.playerId = id;
+        this.auth = auth;
+        this.unmuteTimeout = null;
+    }
+
+    static incrementId() {
+        if (!this.latestId) this.latestId = 1
+        else this.latestId++
+        return this.latestId
+    }
+
+    setDuration(minutes) {
+        this.unmuteTimeout = setTimeout(() => {
+            room.sendAnnouncement(`Te silenciaron.`, this.playerId, announcementColor, HaxNotification.CHAT);
+            this.remove();
+        }, minutes * 60 * 1000);
+        muteArray.add(this);
+    }
+
+    remove() {
+        this.unmuteTimeout = null;
+        muteArray.removeById(this.id);
+    }
+}
+
+class MuteList {
+    constructor() {
+        this.list = [];
+    }
+
+    add(mutePlayer) {
+        this.list.push(mutePlayer);
+        return mutePlayer;
+    }
+
+    getById(id) {
+        var index = this.list.findIndex(mutePlayer => mutePlayer.id === id);
+        if (index !== -1) {
+            return this.list[index];
+        }
+        return null;
+    }
+
+    getByPlayerId(id) {
+        var index = this.list.findIndex(mutePlayer => mutePlayer.playerId === id);
+        if (index !== -1) {
+            return this.list[index];
+        }
+        return null;
+    }
+
+    getByAuth(auth) {
+        var index = this.list.findIndex(mutePlayer => mutePlayer.auth === auth);
+        if (index !== -1) {
+            return this.list[index];
+        }
+        return null;
+    }
+
+    removeById(id) {
+        var index = this.list.findIndex(mutePlayer => mutePlayer.id === id);
+        if (index !== -1) {
+            this.list.splice(index, 1);
+        }
+    }
+
+    removeByAuth(auth) {
+        var index = this.list.findIndex(mutePlayer => mutePlayer.auth === auth);
+        if (index !== -1) {
+            this.list.splice(index, 1);
+        }
+    }
+}
+
+class BallTouch {
+    constructor(player, time, goal, position) {
+        this.player = player;
+        this.time = time;
+        this.goal = goal;
+        this.position = position;
+    }
+}
+
+class HaxStatistics {
+    constructor() {
+        this.games = 0;
+        this.wins = 0;
+        this.winrate = '0.00%';
+        this.playtime = 0;
+        this.goals = 0;
+        this.assists = 0;
+        this.CS = 0;
+        this.ownGoals = 0;
+    }
+}
+
+
+
+
+/* PLAYERS */
+
+const Team = { SPECTATORS: 0, RED: 1, BLUE: 2 };
+const State = { PLAY: 0, PAUSE: 1, STOP: 2 };
+const Role = { PLAYER: 0, VIP: 1, ADMIN_TEMP: 2, ADMIN_PERM: 3, MASTER: 4 };
+const HaxNotification = { NONE: 0, CHAT: 1, MENTION: 2 };
+const Situation = { STOP: 0, KICKOFF: 1, PLAY: 2, GOAL: 3 };
+
+var gameState = State.STOP;
+var playSituation = Situation.STOP;
+var goldenGoal = false;
+
+var playersAll = [];
+var players = [];
+var teamRed = [];
+var teamBlue = [];
+var teamSpec = [];
+
+var teamRedStats = [];
+var teamBlueStats = [];
+
+var banList = [];
+
+/* STATS */
+
+var possession = [0, 0];
+var actionZoneHalf = [0, 0];
+var lastWinner = Team.SPECTATORS;
+var streak = 0;
+
+/* AUTH */
+const authArray = [];
+let adminList = [
+['', 'NICK_OF_ADMIN_2'],
+[ ''],
+[ ''],
+[ 'oXbNwc-cIfRn2ARvCfA_UvMW5lFfiEh3uSUP-TmEkR4','Nestoo'],
+[ '', ''],
+[ '', ''],
+[ '', ''],
+[ '', '' ],
+[ '', '' ],
+];
+let masterList = [
+[''],
+[''],
+['']
+];
+
+/* Vips */
+let vipList = [
+    // ['INSERT_AUTH_HERE_1', 'NICK_OF_VIP_1'],
+    // ['INSERT_AUTH_HERE_2', 'NICK_OF_VIP_2'],
+]
+
+/* COMMANDS */
+const commands = {
+    help: {
+        aliases: ['commands'],
+        roles: Role.PLAYER,
+        desc: `☄️ Puedes revisar los comandos aqui.\nEjemplo: \'!help bb\' sale la descripcion del comando \'bb\'.`,
+        function: helpCommand,
+    },
+    claim: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc: false,
+        function: masterCommand,
+    },
+    vips: {
+        aliases: ['viplist'],
+        roles: Role.PLAYER,
+        desc: `☄️ Comando para mostrar a todos los administradores permanentes`,
+        function: viplistCommand,
+    },
+    sub: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc:`☄️ Este comando te permite irte afk en medio de una partida`,
+    function: subCommand,
+    },
+    afk: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc: `☄️ Con este comando te puedes poner afk, no puedes estar en una partida`,
+        function: afkCommand,
+    },
+    afks: {
+        aliases: ['afklist'],
+        roles: Role.PLAYER,
+        desc: `☄️ Con este comando puedes ver a los AFKS`,
+        function: afkListCommand,
+    },    
+    bb: {
+        aliases: ['Nos vemos', 'Estamos hablando', 'cya bitches'],
+        roles: Role.PLAYER,
+        desc: `☄️ Con este comando puedes irte`,
+        function: leaveCommand,
+    },
+    me: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc: `☄️ Con este comando puedes ver tus estadisticas 🎮`,
+        function: globalStatsCommand,
+    },
+    showme: {
+        aliases: ['statsshow', 'statshow'],
+        roles: Role.PLAYER,
+        desc: `☄️ Puedes mostrar tus stats con este comando☄️`,
+        function: mostrarCommand,
+    },
+    incognito: {
+        aliases: ['inco'],
+        roles: Role.PLAYER,
+        desc:`☄️ Con este comando puedes mandar un mensaje en privado`,
+    function: incognitoCommand,
+    },
+    discord: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc:`☄️ Con este comando puedes ver nuestro discord`,
+    function: discordCommand,
+    },
+    frase: {
+        aliases: ['frases', 'frase de motivacion', 'frase diaria'],
+        roles: Role.PLAYER,
+        desc: `☄️ Te da frases aleatorias`,
+        function: frasesCommand,
+    },
+    inforank: {
+        aliases: ['rangos','ranks'],
+        roles: Role.PLAYER,
+        desc: `☄️ Informacion de los rangos.`,
+        function: InfoRoles,
+    },
+    adminhelp: {
+        aliases: ['admincall'],
+        roles: Role.PLAYER,
+        desc: `☄️ llamar a un administrador`,
+        function: adminhelpCommand,
+    },
+    rename: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc: `☄️ Este comando es para cambiarte de nombre en los comandos de !games, !wins, !goals, !assist, etc.`,
+        function: renameCommand,
+    },
+    games: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc: `☄️ Con este comando puedes ver los top 5 del servidor en juegos.`,
+        function: statsLeaderboardCommand,
+    },
+    wins: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc: `☄️ Con este comando puedes ver los top 5 del servidor en victorias.`,
+        function: statsLeaderboardCommand,
+    },
+    goals: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc: `☄️ Con este comando puedes ver los top 5 del servidor en goles.`,
+        function: statsLeaderboardCommand,
+    },
+    assists: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc: `☄️ Con este comando puedes ver los top 5 del servidor en asistencias.`,
+        function: statsLeaderboardCommand,
+    },
+    cs: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc: `☄️ Con este comando puedes ver los top 5 del servidor en cs.`,
+        function: statsLeaderboardCommand,
+    },
+    playtime: {
+        aliases: [],
+        roles: Role.PLAYER,
+        desc: `☄️ Con este comando puedes ver los top 5 del servidor en tiempo jugado.`,
+        function: statsLeaderboardCommand,
+    },
+   
+    // comandos vip
+
+    saltar: {
+        aliases: ['skip'],
+        roles: Role.VIP,
+        desc: `☄️ Este comando permite saltarte hacia el principio de la fila. Dando prioridad para unirte a un equipo.`,
+        function: skipCommand,
+    },
+    ver: {
+        aliases: [],
+        roles: Role.VIP,
+        desc: `Puedes ver las estadísticas de un jugador según la ID.
+        Requiere 1 argumento:
+        Argumento 1: <id> donde <id> es la ID del jugador al que quieres mirar sus estadísticas.
+        Ejemplo: ver 3 mostrará las estadísticas del jugador 3
+        `,
+        function: playerStatsCommand,
+    },
+
+    //comandos admins
+    training: {
+        aliases: [],
+        roles: Role.ADMIN_TEMP,
+        desc: `☄️ Con este comando puedes poner el mapa de entrenamiento.`,
+        function: stadiumCommand,
+    },
+    classic: {
+        aliases: [],
+        roles: Role.ADMIN_TEMP,
+        desc: `☄️ Con este comando puedes poner el mapa de x1-x2.`,
+        function: stadiumCommand,
+    },
+    big: {
+        aliases: [],
+        roles: Role.ADMIN_TEMP,
+        desc: `☄️Con este comando puedes poner el mapa de x3-x4.`,
+        function: stadiumCommand,
+    },
+    rr: {
+        aliases: [],
+        roles: Role.ADMIN_TEMP,
+        desc: `☄️ Con este comando puedes reiniciar la partida.`,
+        function: restartCommand,
+    },
+    rrs: {
+        aliases: [],
+        roles: Role.ADMIN_TEMP,
+        desc: `☄️ Con este comando puedes cambiar de lado a los jugadores y reiniciar la partida.`,
+        function: restartSwapCommand,
+    },
+    swap: {
+        aliases: ['s'],
+        roles: Role.ADMIN_TEMP,
+        desc: `☄️ Con este comando puedes cambiar de lado a los jugadores.`,
+        function: swapCommand,
+    },
+    mute: {
+        aliases: ['m'],
+        roles: Role.ADMIN_TEMP,
+        desc: `Este comando permite silenciar a un jugador. No podrá hablar durante un tiempo determinado y los administradores pueden reactivarlo en cualquier momento.
+        Se necesitan 2 argumentos:
+        Argumento 1: #<id> donde <id> es la identificación del jugador objetivo. Esto no funcionará si el jugador es administrador.
+        Argumento 2 (opcional): <duración> donde <duración> es la duración del silencio en minutos. Si no se proporciona ningún valor, el silencio dura la duración predeterminada, ${muteDuration} minutos.
+        Ejemplo: !mute #3 20 silenciará al jugador con id 3 durante 20 minutos.`,
+        function: muteCommand,
+    },
+    unmute: {
+        aliases: ['um'],
+        roles: Role.ADMIN_TEMP,
+        desc: `Este comando permite activar el silencio de alguien.
+        Se necesita 1 argumento:
+        Argumento 1: #<id> donde <id> es la identificación del jugador silenciado.
+        O
+        Argumento 1: <número> donde <número> es el número asociado con el silencio proporcionado por el comando 'muteList'.
+        Ejemplo: !unmute #300 reactivará el sonido del jugador con ID 300,
+                 !unmute 8 reactivará el sonido del jugador n°8 según el comando 'muteList'.`,
+        function: unmuteCommand,
+    },
+    mutes: {
+        aliases: [],
+        roles: Role.ADMIN_TEMP,
+        desc: `🔸 Este comando es para ver a los jugadores muteados.`,
+        function: muteListCommand,
+    },
+    anunciar: {
+        aliases: [],
+        roles: Role.MASTER,
+        desc: `🔸 Comando para hacer anuncios en la sala.`,
+        function: anunciarCommand,
+    },
+    clearbans: {
+        aliases: [],
+        roles: Role.MASTER,
+        desc: `Este comando desbloquea a todos. También puede desbanear a un jugador en particular, agregando su ID como argumento.`,
+        function: clearbansCommand,
+    },
+    bans: {
+        aliases: ['banlist'],
+        roles: Role.MASTER,
+        desc: `🔸 Este comando es para ver a los jugadores baneados con sus ids`,
+        function: banListCommand,
+    },
+    admins: {
+        aliases: ['adminlist'],
+        roles: Role.MASTER,
+        desc: `🔸 Comando para mostrar a todos los administradores permanentes`,
+        function: adminListCommand,
+    },
+    maswins: {
+        aliases: [],
+        roles: Role.MASTER,
+        desc: `Añade victorias a un jugador. Ejemplo: !maswins #2 (Id del jugador) 150 (Número de victorias que valla a agregar).`,
+        function: añadirWinsCommand,
+    },
+    setvip: {
+        aliases: ['vip'],
+        roles: Role.MASTER,
+        desc: `
+    Dale vip a un jugador ejemplo: !setvip #2`,
+        function: setVipCommand,
+    },
+    removevip: {
+        aliases: ['unvip'],
+        roles: Role.MASTER,
+        desc: `
+    Quitale vip a un jugador ejemplo: !setvip #2`,
+        function: removeVipCommand,
+    },
+    setadmin: {
+        aliases: ['admin'],
+        roles: Role.MASTER,
+        desc: `Este comando permite configurar a alguien como administrador. Podrá conectarse como administrador y los maestros podrán eliminarlo en cualquier momento.
+        Se necesita 1 argumento:
+        Argumento 1: #<id> donde <id> es la identificación del jugador objetivo.
+        Ejemplo: !setadmin #3 le dará administrador al jugador con ID 3.`,
+        function: setAdminCommand,
+    },
+    removeadmin: {
+        aliases: ['unadmin'],
+        roles: Role.MASTER,
+        desc: `Este comando permite eliminar a alguien como administrador.
+        Se necesita 1 argumento:
+        Argumento 1: #<id> donde <id> es la identificación del jugador objetivo.
+        O
+        Argumento 1: <número> donde <número> es el número asociado con el administrador proporcionado por el comando 'admins'.
+        Ejemplo: !removeadmin #300 eliminará el administrador del reproductor con ID 300,
+                  !removeadmin 2 eliminará el administrador n°2 según el comando 'admins'.`,
+        function: removeAdminCommand,
+    },
+    password: {
+        aliases: ['pw'],
+        roles: Role.MASTER,
+        desc: `Este comando permite agregar una contraseña a la sala.
+        Se necesita 1 argumento:
+        Argumento 1: <contraseña> donde <contraseña> es la contraseña que desea para la sala.
+       
+        Para eliminar la contraseña de la sala, simplemente ingrese '!password'.`,
+        function: passwordCommand,
+    },
+    kickred: {
+        aliases: ['kickr'],
+        roles: Role.MASTER,
+        desc: `
+    This command kicks all the players from the red team, including the player that entered the command. You can give as an argument the reason of the kick.`,
+        function: kickTeamCommand,
+    },
+    kickblue: {
+        aliases: ['kickb'],
+        roles: Role.MASTER,
+        desc: `
+    This command kicks all the players from the blue team, including the player that entered the command. You can give as an argument the reason of the kick.`,
+        function: kickTeamCommand,
+    },
+    kickspec: {
+        aliases: ['kicks'],
+        roles: Role.MASTER,
+        desc: `
+    This command kicks all the players from the spectators team, including the player that entered the command. You can give as an argument the reason of the kick.`,
+        function: kickTeamCommand,
+    },
+};
+
+/* GAME */
+var lastTouches = Array(2).fill(null);
+var lastTeamTouched;
+var speedCoefficient = 100 / (5 * (0.99 ** 60 + 1));
+var ballSpeed = 0;
+var playerRadius = 15;
+var ballRadius = 10;
+var triggerDistance = playerRadius + ballRadius + 0.01;
+/* COLORS */
+var welcomeColor = 0xFF003C;
+var announcementColor = 0x05C5FF;
+var infoColor = 0x98FB98;
+var privateMessageColor = 0xffd700;
+var redColor = 0xFF2212;
+var blueColor = 0x62cbff;
+var warningColor = 0xffa135;
+var successColor = 0x75ff75;
+var defaultColor = null;
+/* AUXILIARY */
+var checkTimeVariable = false;
+var checkStadiumVariable = true;
+var endGameVariable = false;
+var cancelGameVariable = false;
+var kickFetchVariable = false;
+var chooseMode = false;
+var timeOutCap;
+var capLeft = false;
+var redCaptainChoice = '';
+var blueCaptainChoice = '';
+var chooseTime = 20;
+var AFKSet = new Set();
+var AFKMinSet = new Set();
+var AFKCooldownSet = new Set();
+var minAFKDuration = 0;
+var maxAFKDuration = 30;
+var AFKCooldown = 3;
+var muteArray = new MuteList();
+var muteDuration = 5;
+var removingPlayers = false;
+var insertingPlayers = false;
+var stopTimeout;
+var startTimeout;
+var unpauseTimeout;
+var removingTimeout;
+var insertingTimeout;
+var emptyPlayer = {
+    id: 0,
+};
+stadiumCommand(emptyPlayer, "!training");
+var game = new Game();
+
+/* FUNCTIONS */
+
+/* SlotsPriv */
+
+function isMassive(){ const numPlayers = room.getPlayerList().length; if(numPlayers == 25){ room.setPassword("margaritax4"); room.sendAnnouncement( "☄️ La sala llego a su maximo, Se coloco contraseña", null, announcementColor, "bold", HaxNotification.CHAT );}};
+
+/* AUXILIARY FUNCTIONS */
+
+if (typeof String.prototype.replaceAll != 'function') { String.prototype.replaceAll = function (search, replacement) { var target = this; return target.split(search).join(replacement); };}
+function getDate() { let d = new Date(); return d.toLocaleDateString() + ' ' + d.toLocaleTimeString();}
+
+/* MATH FUNCTIONS */
+
+function getRandomInt(max) {
+
+// returns a random number between 0 and max-1
+
+return Math.floor(Math.random() * Math.floor(max));}
+function pointDistance(p1, p2) { return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));}
+
+/* TIME FUNCTIONS */
+
+function getHoursStats(time) { return Math.floor(time / 3600);}
+function getMinutesGame(time) { var t = Math.floor(time / 60); return `${Math.floor(t / 10)}${Math.floor(t % 10)}`;}
+function getMinutesReport(time) { return Math.floor(Math.round(time) / 60);}
+function getMinutesEmbed(time) { var t = Math.floor(Math.round(time) / 60); return `${Math.floor(t / 10)}${Math.floor(t % 10)}`;}
+function getMinutesStats(time) { return Math.floor(time / 60) - getHoursStats(time) * 60;}
+function getSecondsGame(time) { var t = Math.floor(time - Math.floor(time / 60) * 60); return `${Math.floor(t / 10)}${Math.floor(t % 10)}`;}
+function getSecondsReport(time) { var t = Math.round(time); return Math.floor(t - getMinutesReport(t) * 60);}
+function getSecondsEmbed(time) { var t = Math.round(time); var t2 = Math.floor(t - Math.floor(t / 60) * 60); return `${Math.floor(t2 / 10)}${Math.floor(t2 % 10)}`;}
+function getTimeGame(time) { return `[${getMinutesGame(time)}:${getSecondsGame(time)}]`;}
+function getTimeEmbed(time) { return `[${getMinutesEmbed(time)}:${getSecondsEmbed(time)}]`;}
+function getTimeStats(time) { if (getHoursStats(time) > 0) { return `${getHoursStats(time)}h${getMinutesStats(time)}m`; } else { return `${getMinutesStats(time)}m`; }}
+function getGoalGame() { return game.scores.red + game.scores.blue;}
+
+/* REPORT FUNCTIONS */
+
+function findFirstNumberCharString(str) { let str_number = str[str.search(/[0-9]/g)]; return str_number === undefined ? "0" : str_number;}
+function getIdReport() { var d = new Date(); return `${d.getFullYear() % 100}${d.getMonth() < 9 ? '0' : ''}${d.getMonth() + 1}${d.getDate() < 10 ? '0' : ''}${d.getDate()}${d.getHours() < 10 ? '0' : ''}${d.getHours()}${d.getMinutes() < 10 ? '0' : ''}${d.getMinutes()}${d.getSeconds() < 10 ? '0' : ''}${d.getSeconds()}${findFirstNumberCharString(roomName)}`;}
+function getRecordingName(game) { let d = new Date(); let day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate(); let month = d.getMonth() < 10 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1); let year = d.getFullYear() % 100 < 10 ? '0' + (d.getFullYear() % 100) : (d.getFullYear() % 100); let hour = d.getHours() < 10 ? '0' + d.getHours() : d.getHours(); let minute = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes(); return `${day}-${month}-${year}-${hour}h${minute}.hbr2`;}
+function fetchRecording(game) { if (gameWebhook != "") { let form = new FormData(); form.append(null, new File([game.rec], getRecordingName(game), { "type": "text/plain" })); form.append("payload_json", JSON.stringify({"username": '🔫 WITHFIELD 4v4 | ¡24/7 💥🕹️!'})); fetch(gameWebhook, {method: 'POST', body: form,}).then((res) => res); }}
+
+/* FEATURE FUNCTIONS */
+
+function getCommand(commandStr) { if (commands.hasOwnProperty(commandStr)) return commandStr; for (const [key, value] of Object.entries(commands)) { for (let alias of value.aliases) { if (alias == commandStr) return key; } } return false;}
+function getPlayerComp(player) { if (player == null || player.id == 0) return null; var comp = game.playerComp; var index = comp[0].findIndex((c) => c.auth == authArray[player.id][0]); if (index != -1) return comp[0][index]; index = comp[1].findIndex((c) => c.auth == authArray[player.id][0]); if (index != -1) return comp[1][index];    return null;}
+function getTeamArray(team, includeAFK = true) { if (team == Team.RED) return teamRed; if (team == Team.BLUE) return teamBlue; if (includeAFK) { return playersAll.filter((p) => p.team === Team.SPECTATORS); } return teamSpec;}
+function sendAnnouncementTeam(message, team, color, style, mention) { for (let player of team) { room.sendAnnouncement(message, player.id, color, style, mention); }}
+function teamChat(player, message) { var msgArray = message.split(/ +/).slice(1); var emoji = player.team == Team.RED ? '🔴' : player.team == Team.BLUE ? '🔵' : '⚪'; var message = `[ᴇᴏ̨ᴜɪᴘᴏ ${emoji}] ${player.name}: ${msgArray.join(' ')}`; var team = getTeamArray(player.team, true); var color = player.team == Team.RED ? redColor : player.team == Team.BLUE ? blueColor : null; var style = 'bold'; var mention = HaxNotification.CHAT; sendAnnouncementTeam(message, team, color, style, mention);}
+function playerChat(player, message) { var msgArray = message.split(/ +/); var playerTargetIndex = playersAll.findIndex((p) => p.name.replaceAll(' ', '_') == msgArray[0].substring(2)); if (playerTargetIndex == -1) { room.sendAnnouncement(`☄️ Jugador no válido, asegúrese de que el nombre que ingresó sea correcto.`, player.id, announcementColor, null); return false; } var playerTarget = playersAll[playerTargetIndex]; if (player.id == playerTarget.id) { room.sendAnnouncement(`¡Puedes whispearte a ti mismo!`, player.id, announcementColor, null); return false;}
+var messageFrom = `📝 [DM con ${playerTarget.name}] ${player.name}: ${msgArray.slice(1).join(' ')}`
+var messageTo = `📝 [DM con ${player.name}] ${player.name}: ${msgArray.slice(1).join(' ')}`
+room.sendAnnouncement(messageFrom, player.id, privateMessageColor, 'bold', HaxNotification.CHAT); room.sendAnnouncement(messageTo, playerTarget.id, privateMessageColor, 'bold', HaxNotification.CHAT); }
+
+/* PHYSICS FUNCTIONS */
+
+function calculateStadiumVariables() { if (checkStadiumVariable && teamRed.length + teamBlue.length > 0) { checkStadiumVariable = false; setTimeout(() => { let ballDisc = room.getDiscProperties(0); let playerDisc = room.getPlayerDiscProperties(teamRed.concat(teamBlue)[0].id); ballRadius = ballDisc.radius; playerRadius = playerDisc.radius; triggerDistance = ballRadius + playerRadius + 0.01; speedCoefficient = 100 / (5 * ballDisc.invMass * (ballDisc.damping ** 60 + 1)); }, 1); }}
+function checkGoalKickTouch(array, index, goal) { if (array != null && array.length >= index + 1) { var obj = array[index]; if (obj != null && obj.goal != null && obj.goal == goal) return obj; } return null; }
+
+/* BUTTONS */
+
+function topButton() { if (teamSpec.length > 0) { if (teamRed.length == teamBlue.length && teamSpec.length > 1) { room.setPlayerTeam(teamSpec[0].id, Team.RED); room.setPlayerTeam(teamSpec[1].id, Team.BLUE); } else if (teamRed.length < teamBlue.length) room.setPlayerTeam(teamSpec[0].id, Team.RED); else room.setPlayerTeam(teamSpec[0].id, Team.BLUE); }}
+function randomButton() { if (teamSpec.length > 0) { if (teamRed.length == teamBlue.length && teamSpec.length > 1) { var r = getRandomInt(teamSpec.length); room.setPlayerTeam(teamSpec[r].id, Team.RED); teamSpec = teamSpec.filter((spec) => spec.id != teamSpec[r].id); room.setPlayerTeam(teamSpec[getRandomInt(teamSpec.length)].id, Team.BLUE); } else if (teamRed.length < teamBlue.length) room.setPlayerTeam(teamSpec[getRandomInt(teamSpec.length)].id, Team.RED); else room.setPlayerTeam(teamSpec[getRandomInt(teamSpec.length)].id, Team.BLUE); }}
+function blueToSpecButton() { clearTimeout(removingTimeout); removingPlayers = true; removingTimeout = setTimeout(() => { removingPlayers = false; }, 100); for (var i = 0; i < teamBlue.length; i++) { room.setPlayerTeam(teamBlue[teamBlue.length - 1 - i].id, Team.SPECTATORS); }}
+function redToSpecButton() { clearTimeout(removingTimeout); removingPlayers = true; removingTimeout = setTimeout(() => { removingPlayers = false; }, 100);for (var i = 0; i < teamRed.length; i++) { room.setPlayerTeam(teamRed[teamRed.length - 1 - i].id, Team.SPECTATORS); }}
+function resetButton() { clearTimeout(removingTimeout); removingPlayers = true; removingTimeout = setTimeout(() => { removingPlayers = false; }, 100); for (let i = 0; i < Math.max(teamRed.length, teamBlue.length); i++) { if (Math.max(teamRed.length, teamBlue.length) - teamRed.length - i > 0) room.setPlayerTeam(teamBlue[teamBlue.length - 1 - i].id, Team.SPECTATORS); else if (Math.max(teamRed.length, teamBlue.length) - teamBlue.length - i > 0) room.setPlayerTeam(teamRed[teamRed.length - 1 - i].id, Team.SPECTATORS); else break; } for (let i = 0; i < Math.min(teamRed.length, teamBlue.length); i++) { room.setPlayerTeam(teamBlue[Math.min(teamRed.length, teamBlue.length) - 1 - i].id, Team.SPECTATORS); room.setPlayerTeam(teamRed[Math.min(teamRed.length, teamBlue.length) - 1 - i].id, Team.SPECTATORS);}}
+function swapButton() { clearTimeout(removingTimeout); removingPlayers = true; removingTimeout = setTimeout(() => { removingPlayers = false; }, 100); for (let player of teamBlue) { room.setPlayerTeam(player.id, Team.RED); } for (let player of teamRed) { room.setPlayerTeam(player.id, Team.BLUE); }}
+
+/* COMMAND FUNCTIONS */
+/* PLAYER COMMANDS */
+
+function leaveCommand(player, message) { room.kickPlayer(player.id, 'Cya bitches ☄️',false);}
+function helpCommand(player, message) {
+    var msgArray = message.split(/ +/).slice(1);
+    if (msgArray.length == 0) {
+        var commandString = '                                                       🟡𝗟𝗜𝗦𝗧𝗔 𝗗𝗘 𝗖𝗢𝗠𝗔𝗡𝗗𝗢𝗦🔴\n \n𝑪𝑶𝑴𝑨𝑵𝑫𝑶𝑺 𝑫𝑬 𝑼𝑺𝑼𝑨𝑹𝑰𝑶𝑺:\n';
+        for (const [key, value] of Object.entries(commands)) {
+            if (value.desc && value.roles == Role.PLAYER) commandString += ` !${key},`;
+        }
+        commandString = commandString.substring(0, commandString.length - 1) + '.\n';
+        commandString += helpVIP(player);
+        if (getRole(player) >= Role.ADMIN_TEMP) {
+            commandString += `\nCOMANDOS DE ADMINISTRADORES:\n`;
+            for (const [key, value] of Object.entries(commands)) {
+                if (value.desc && value.roles == Role.ADMIN_TEMP) commandString += ` !${key},`;
+            }
+            if (commandString.slice(commandString.length - 1) == ':')
+                commandString += ` None,`;
+            commandString = commandString.substring(0, commandString.length - 1) + '.\n';
+        }
+        if (getRole(player) >= Role.MASTER) {
+            commandString += `\nCOMANDOS EXTRAS:\n`;
+            for (const [key, value] of Object.entries(commands)) {
+                if (value.desc && value.roles == Role.MASTER) commandString += ` !${key},`;
+            }
+            if (commandString.slice(commandString.length - 1) == ':') commandString += ` None,`;
+            commandString = commandString.substring(0, commandString.length - 1) + '.\n';
+        }
+        commandString += "\nPara obtener información sobre un comando específico, escriba ''!help <Nombre del comando>'.";
+        room.sendAnnouncement(
+            commandString,
+            player.id,
+            infoColor,
+           'bold',
+            HaxNotification.CHAT
+        );
+    } else if (msgArray.length >= 1) {
+        var commandName = getCommand(msgArray[0].toLowerCase());
+        if (commandName != false && commands[commandName].desc != false)
+            room.sendAnnouncement(
+                `\'${commandName}\' comando :\n${commands[commandName].desc}`,
+                player.id,
+                infoColor,
+                'bold',
+                HaxNotification.CHAT
+            );
+        else
+            room.sendAnnouncement(
+                `El comando en el que intentó obtener información no existe.Para verificar todos los comandos disponibles, escriba \ '! Ayuda \'`,
+                player.id,
+                redColor,
+                'bold',
+                HaxNotification.CHAT
+            );
+    }
+}
+function helpVIP(player){
+let commandString = ''
+if (getRole(player) == Role.VIP) {
+    commandString += `\nCOMANDOS VIP:\n`;
+    for (const [key, value] of Object.entries(commands)) {
+        if (value.roles == Role.VIP) commandString += ` !${key},`;
+    }
+    if (commandString.slice(commandString.length - 1) == ':')
+        commandString += ` None,`;
+    commandString = commandString.substring(0, commandString.length - 1) + '.\n';
+}
+return commandString
+}
+
+function globalStatsCommand(player, message) {
+    var stats = new HaxStatistics(player.name);
+    if (localStorage.getItem(authArray[player.id][0])) {
+        stats = JSON.parse(localStorage.getItem(authArray[player.id][0]));
+    }
+    var statsString = printPlayerStats(stats);
+    room.sendAnnouncement('Tus estadisticas ' + player.name + ':\n\n' + statsString , player.id, 0xc4ff65, 'bold', HaxNotification.CHAT);
+    room.sendAnnouncement('☄️ Este comando solo lo puedes ver tu, para mostrar a los demas usa !showme ', player.id, 0xFF003C);
+}
+
+var cooldowns = {}; // Objeto para almacenar los tiempos de uso por jugador
+
+function mostrarCommand(player, message) {var tiempoactualMostrar = new Date().getTime();
+
+// Verificar si el jugador tiene un tiempo de cooldown almacenado
+
+if (!cooldowns[player.id] || tiempoactualMostrar - cooldowns[player.id] > 120000) { cooldowns[player.id] = tiempoactualMostrar; 
+
+// Actualizar el tiempo de cooldown para el jugador
+
+var playerName = player.name; var stats = new HaxStatistics(playerName); if (localStorage.getItem(authArray[player.id][0])) { stats = JSON.parse(localStorage.getItem(authArray[player.id][0])); } var statsString = printPlayerStats(stats); room.sendAnnouncement('Ժ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ \n\n', null, 0xFFFFFF, 'bold', HaxNotification.CHAT); room.sendAnnouncement(playerName + ' Enseño sus stats 🎮\n ', null, 0xFFFFFF, 'bold', HaxNotification.CHAT); room.sendAnnouncement(statsString, null, 0x800080, 'bold', null); room.sendAnnouncement( ' \nԺ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴ ╴  \n', null, 0xFFC12F, 'bold', null); } else { room.sendAnnouncement("☄️ Espera antes de usar este comando de nuevo.", player.id, 0xFFE400, HaxNotification.MENTION);}}
+
+// incognito mensaje 
+
+var cooldowns = {}; // Objeto para almacenar los tiempos de uso por jugador
+
+function incognitoCommand(player, message) {var tiempoactualInco = new Date().getTime();
+
+// Verificar si el jugador tiene un tiempo de cooldown almacenado
+
+if (!cooldowns[player.id] || tiempoactualInco - cooldowns[player.id] > 120000) { cooldowns[player.id] = tiempoactualInco; 
+
+// Actualizar el tiempo de cooldown para el jugador
+
+         const words = message.split(' ');
+    
+// Utilizar === para cada comparación 
+
+words.shift();  const mensajeFinal = words.join(' '); room.sendAnnouncement( `Incognito: ` + mensajeFinal, null, 0xE5E4E2, 'bold', HaxNotification.MENTION); } else { room.sendAnnouncement("Por favor, espera 2 minutos antes de usar este comando de nuevo.", player.id, 0xFFE400, HaxNotification.MENTION);}}
+
+// Lista de frases de motivación
+var frases = [
+    '"Ni lo intente"',
+    '""',
+    '"  "',
+    '""',
+    '""',
+    '""',
+    '""',
+    '""',
+    '"',
+    '"',
+    '"',
+    '""',
+    '""',
+    ' "" ',
+    '""',
+    '""',
+    ];
+    
+    // Variable para almacenar el tiempo del último uso del comando
+var ultimoUso = 0;
+
+function frasesCommand(player) { var tiempoActual = new Date().getTime(); if (tiempoActual - ultimoUso > 90000) { ultimoUso = tiempoActual; var randomIndex = Math.floor(Math.random() * frases.length); var frase = frases[randomIndex]; room.sendAnnouncement(frase, player.id, successColor, 'bold', HaxNotification.CHAT ); } else { room.sendAnnouncement("Por favor, espera un momento antes de usar este comando de nuevo.", player.id, redColor, 'bold', HaxNotification.CHAT ); }}
+
+// Discord command
+
+function discordCommand(player) {if (player) {room.sendAnnouncement("☄️☄️ ", player.id, 0xF6FF43, 'bold'); }}
+function InfoRoles(player, message) {{
+room.sendAnnouncement( "Tu rango depende de tu porcentaje de victorias", player.id, 0xFFFFFF, "bold");
+room.sendAnnouncement("🦠 ηєωвιє (<0)", player.id, 0xffd700, "bold");
+room.sendAnnouncement("🥨 αρяєη∂ιz (>5)", player.id, 0xd5d5d5, "bold");
+room.sendAnnouncement("⏳∂єѕтα¢α∂σ (>15)", player.id, 0x896728, "bold");
+room.sendAnnouncement("🌕 ѕσвяєѕαℓιєηтє (>25)", player.id, 0xD8BFD8, "bold");
+room.sendAnnouncement("🌀 ѕкιℓℓє∂ (>40)", player.id, 0xF0E68C, "bold");
+room.sendAnnouncement("✨ єχρєяιмєηтα∂σ (>60)", player.id, 0xF0F8FF, "bold");
+room.sendAnnouncement( "➰ яα∂ιαηтє (>80)", player.id, 0xF8F8FF, "bold");
+room.sendAnnouncement("🎮 gαмєя (>100)", player.id, 0xFFFAFA, "bold");
+room.sendAnnouncement("👹 ρяσ ѕкιℓℓє∂ (>125)", player.id, 0xFFF5EE, "bold");
+room.sendAnnouncement("🌟 єѕтяєℓℓα ƒυgαz (>150)", player.id, 0xFFFAF0, "bold");
+room.sendAnnouncement("🌌 ησ ƒєαя (>175)", player.id, 0xF5F5F5, "bold");
+room.sendAnnouncement("🌈 αѕ¢єη∂ιєηтє (>190)", player.id, 0xF5F5DC, "bold");
+room.sendAnnouncement("⚡ ¢яα¢кє∂ (>250)", player.id, 0xFDF5E6, "bold");
+room.sendAnnouncement("🏆 ℓєтнιм¢σσк (>300)", player.id, 0xFFFFF0, "bold");
+room.sendAnnouncement("🎆 ρяιмєя(>350)", player.id, 0xFAF0E6, "bold");
+room.sendAnnouncement("🏅 мαѕтєямιη∂ (>400)", player.id, 0xFFF8DC, "bold");
+room.sendAnnouncement("🥈 ѕαναgє(>450)", player.id, 0xFAEBD7, "bold");
+room.sendAnnouncement("🥇 ρяσ∂ιgισ (>500)", player.id, 0xFFEBCD, "bold");
+}}
+
+// Función para llamar a un administrador con razón
+
+function adminhelpCommand(player, message) { var args = message.split(' '); args.shift(); 
+
+// Elimina el comando "!adminhelp" del array
+
+ var reason = args.join(' '); if (!reason) { room.sendAnnouncement("☄️ Para usar este comando debes poner !adminhelp + la razón por lo que lo haces", player.id, announcementColor, HaxNotification.MENTION); return;}
+
+    // Obtener la URL del webhook de Discord
+
+var webhookUrl = calladminWebhook;
+
+    // Crear un objeto de mensaje de Discord con la razón
+
+var message = { content: "<@&12323232> ", embeds: [ { title: "¡Llamada a Admin!", description: "El jugador " + player.name + " ha llamado a un administrador en la sala " + roomName + ' \n\nRazón: '+ reason, color: 0xFFEBCD, fields: [ { name: "Jugador", value: `\nNombre del jugador: [   ${player.name}   ] \nId del jugador: [   ${authArray[player.id][0]}   ] \nConn del jugador: [   ${authArray[player.id][1]}   ]`, inline: true }]} ]};
+
+// Enviar el mensaje al webhook de Discord
+
+fetch(webhookUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(message)});
+
+// Enviar un mensaje de anuncio a la sala
+
+room.sendAnnouncement(`☄️ ${player.name} ha llamado a un administrador!`, null, announcementColor, 'bold', HaxNotification.CHAT); room.sendAnnouncement(` \nEn caso de que no venga, entra a nuestro Discord. \nUsa !discord para obtener nuestro Discord.`, player.id, announcementColor, HaxNotification.CHAT);}
+
+// Ejemplo de cómo llamar a la función con una razón
+// adminhelpCommand(player, "Razón del llamado al administrador");
+
+function renameCommand(player) {if (player) {room.sendAnnouncement("☄️ ¿Qué? ", player.id, 0xFFE4C4, 'bold'); }}
+function statsLeaderboardCommand(player, message) { var key = message.split(/ +/)[0].substring(1).toLowerCase(); printRankings(key, player.id);}
+function afkCommand(player, message) { if (player.team == Team.SPECTATORS || players.length == 1) { if (AFKSet.has(player.id)) { if (AFKMinSet.has(player.id)) { room.sendAnnouncement(`☄️ Hay un mínimo de ${minAFKDuration} minuto de tiempo AFK. ¡No abuses del comando!`, player.id, announcementColor, HaxNotification.CHAT); } else { AFKSet.delete(player.id); room.sendAnnouncement(`                                             ☄️ ${player.name} ya no esta afk !                                   `, null, announcementColor, 'bold'); updateTeams(); handlePlayersJoin(); }} else { if (AFKCooldownSet.has(player.id)) { room.sendAnnouncement(`☄️ Solo puedes ir AFK cada ${AFKCooldown} minutos. ¡No abuses del comando!`, player.id, announcementColor, HaxNotification.CHAT); } else { AFKSet.add(player.id); if (!player.admin) { AFKMinSet.add(player.id); AFKCooldownSet.add(player.id); setTimeout( (id) => { AFKMinSet.delete(id); }, minAFKDuration * 60 * 1000, player.id ); setTimeout( (id) => { AFKSet.delete(id); }, maxAFKDuration * 60 * 1000, player.id ); setTimeout( (id) => { AFKCooldownSet.delete(id); }, AFKCooldown * 60 * 1000, player.id ); } room.setPlayerTeam(player.id, Team.SPECTATORS); room.sendAnnouncement(`                                             ☄️ ${player.name} ahora esta afk !                                   `, null, announcementColor, 'bold'); updateTeams(); handlePlayersLeave(); } } } else { room.sendAnnouncement(`                                             ☄️ ¡No puedes ir AFK mientras estás en un equipo!`, player.id, announcementColor, HaxNotification.CHAT);}}
+
+/* Comando !sub*/
+
+function subCommand(player, message) { if (AFKSet.has(player.id)) { if (AFKMinSet.has(player.id)) { room.sendAnnouncement(`☄️ Hay un mínimo de ${minAFKDuration} minuto de tiempo AFK. ¡No abuses del comando!`, player.id, announcementColor, HaxNotification.CHAT); } else { AFKSet.delete(player.id); room.sendAnnouncement(`                                             ☄️ ${player.name} ya no esta afk !                                   `, null, announcementColor, 'bold', null); updateTeams(); handlePlayersJoin(); } } else { if (AFKCooldownSet.has(player.id)) { room.sendAnnouncement(`☄️ Solo puedes ir AFK cada ${AFKCooldown} minutos. ¡No abuses del comando!`, player.id, announcementColor, HaxNotification.CHAT); } else { AFKSet.add(player.id); if (!player.admin) { AFKMinSet.add(player.id); AFKCooldownSet.add(player.id); setTimeout( (id) => { AFKMinSet.delete(id); }, minAFKDuration * 60 * 1000, player.id ); setTimeout( (id) => { AFKSet.delete(id); }, maxAFKDuration * 60 * 1000, player.id ); setTimeout( (id) => { AFKCooldownSet.delete(id); }, AFKCooldown * 60 * 1000, player.id ); } room.setPlayerTeam(player.id, Team.SPECTATORS); room.sendAnnouncement(`                                             ☄️ ${player.name} ahora esta afk !`, null, announcementColor, 'bold', null ); updateTeams(); handlePlayersLeave(); } }}
+function afkListCommand(player, message) { if (AFKSet.size == 0) { room.sendAnnouncement("                                             ☄️ No hay nadie en la lista AFK ! 😴",  player.id,  announcementColor, 'bold', null); return; } var cstm = '☄️ Lista de AFK : '; AFKSet.forEach((_, value) => { var p = room.getPlayer(value); if (p != null) cstm += p.name + `, `; }); cstm = cstm.substring(0, cstm.length - 2) + '.'; room.sendAnnouncement(cstm, player.id, announcementColor, 'bold', null);}
+function masterCommand(player, message) { var msgArray = message.split(/ +/).slice(1); if (parseInt(msgArray[0]) == masterPassword) { if (!masterList.includes(authArray[player.id][0])) { room.setPlayerAdmin(player.id, true); adminList = adminList.filter((a) => a[0] != authArray[player.id][0]); masterList.push(authArray[player.id][0]); room.sendAnnouncement(`                               ☄️ ${player.name} ahora es un maestro de sala!`,  null,  announcementColor, 'bold', HaxNotification.CHAT ); } else { room.sendAnnouncement(`☄️ ¡Ya eres un maestro!`, player.id, announcementColor, 'bold',  HaxNotification.CHAT); }}}
+function viplistCommand(player, message) { if (vipList.length == 0) { room.sendAnnouncement("                                       ☄️ No hay nadie en la lista de vips ! ", player.id, announcementColor, 'bold', null); return false; } var cstm = '☄️💎 Lista de vips : '; for (let i = 0; i < vipList.length; i++) { cstm += vipList[i][1] + `[${i}], `; } cstm = cstm.substring(0, cstm.length - 2) + '.'; room.sendAnnouncement(cstm, player.id, announcementColor, 'bold', null);}
+
+// Vip Comand
+
+function skipCommand(player){ if(player.team != Team.SPECTATORS){ room.sendAnnouncement(`☄️ Ya estás dentro de un equipo. Usa este comando cuando seas espectador.`, player.id, privateMessageColor, 'bold', HaxNotification.NONE ); return; } const i = teamSpec.findIndex(spec=>spec.id==player.id); if(i==-1){ room.sendAnnouncement(`☄️ No te encuentras en la lista de espectadores. Intenta más tarde.`, player.id, privateMessageColor, 'bold', HaxNotification.NONE ); return; } const spec = teamSpec.splice(i, 1)[0]; teamSpec.unshift(spec); room.sendAnnouncement(`☄️ `+ player.name +` esta al principio de la fila. Buen juego!`,  null, successColor, 'bold', HaxNotification.NONE ); balanceTeams();}
+function playerStatsCommand(player, message) {
+    const args = message.split(/ +/).slice(1);
+    if(!args.length){
+        room.sendAnnouncement('☄️ Se necesita una ID para ver', player.id, redColor, 'bold', HaxNotification.NONE);
+        return;
+    }
+    const id = parseInt(args[0]);
+    if (isNaN(id)) {
+        room.sendAnnouncement(`☄️ ${args[0]} no es una ID válida. ¿Ingresaste un nombre?`, player.id, redColor, 'bold', HaxNotification.NONE);
+        return;
+    }
+    const target = playersAll.find(player => player.id == id);
+    if (!target) {
+        room.sendAnnouncement(`☄️ No se encontró al jugador con ID ${id}. Intenta con otra ID, por ejemplo ${playersAll[0].id}`, player.id, redColor, 'bold', HaxNotification.NONE);
+        return;
+    }
+    let stats = getGamePlayerStats(target);
+    if (localStorage.getItem(authArray[id][0])) {
+        stats = JSON.parse(localStorage.getItem(authArray[id][0]));
+    }
+    const statsString = printPlayerStats(stats);
+    room.sendAnnouncement(
+        statsString,
+        player.id,
+        infoColor,
+        'bold'
+    );
+}
+
+/* ADMIN COMMANDS */
+function restartCommand(player, message) { room.sendAnnouncement('                                        ☄️ ¡Partido reiniciado', null, announcementColor, 'bold'); instantRestart();}
+function restartSwapCommand(player, message) { room.stopGame(); swapButton(); startTimeout = setTimeout(() => { room.startGame(); }, 10);}
+function swapCommand(player, message) { if (playSituation == Situation.STOP) { swapButton(); room.sendAnnouncement('✔️ ¡Equipos intercambiados!', null, announcementColor, 'bold'); } else { room.sendAnnouncement(`☄️ Detenga el juego antes de cambiar.`, player.id, announcementColor, HaxNotification.CHAT);}}
+function kickTeamCommand(player, message) { var msgArray = message.split(/ +/); var reasonString = `Team kick by ${player.name}`; if (msgArray.length > 1) { reasonString = msgArray.slice(1).join(' '); } if (['!kickred', '!kickr'].includes(msgArray[0].toLowerCase())) { for (let i = 0; i < teamRed.length; i++) { setTimeout(() => { room.kickPlayer(teamRed[0].id, reasonString, false); }, i * 20) } } else if (['!kickblue', '!kickb'].includes(msgArray[0].toLowerCase())) { for (let i = 0; i < teamBlue.length; i++) { setTimeout(() => { room.kickPlayer(teamBlue[0].id, reasonString, false); }, i * 20) } } else if (['!kickspec', '!kicks'].includes(msgArray[0].toLowerCase())) { for (let i = 0; i < teamSpec.length; i++) { setTimeout(() => { room.kickPlayer(teamSpec[0].id, reasonString, false); }, i * 20) } }}
+function stadiumCommand(player, message) { var msgArray = message.split(/ +/); if (gameState == State.STOP) { if (['!classic'].includes(msgArray[0].toLowerCase())) { if (JSON.parse(classicMap).name == 'Classic') { room.setDefaultStadium('Classic'); } else { room.setCustomStadium(classicMap); } currentStadium = 'classic'; } else if (['!big'].includes(msgArray[0].toLowerCase())) { if (JSON.parse(bigMap).name == 'Big') { room.setDefaultStadium('Big'); } else { room.setCustomStadium(bigMap); } currentStadium = 'big'; } else if (['!training'].includes(msgArray[0].toLowerCase())) { room.setCustomStadium(trainingMap); currentStadium = 'training'; } else { room.sendAnnouncement(`☄️ Estadio no reconocido.`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ Detenga el juego antes de usar este comando.`, player.id, announcementColor, HaxNotification.CHAT); }}
+function muteCommand(player, message) { var msgArray = message.split(/ +/).slice(1); if (msgArray.length > 0) { if (msgArray[0].length > 0 && msgArray[0][0] == '#') { msgArray[0] = msgArray[0].substring(1, msgArray[0].length); if (room.getPlayer(parseInt(msgArray[0])) != null) { var playerMute = room.getPlayer(parseInt(msgArray[0])); var minutesMute = muteDuration; if (msgArray.length > 1 && parseInt(msgArray[1]) > 0) { minutesMute = parseInt(msgArray[1]); } if (!playerMute.admin) { var muteObj = new MutePlayer(playerMute.name, playerMute.id, authArray[playerMute.id][0]); muteObj.setDuration(minutesMute); room.sendAnnouncement(`☄️ ${playerMute.name} ha sido silenciado por ${minutesMute} minutos.`, null, announcementColor, 'bold', null); } else { room.sendAnnouncement(`☄️ No puede silenciar a un administrador.`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ No hay ningún jugador con tal ID en la sala. Ingrese "!help mute" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ Formato incorrecto para su argumento. Ingrese "!help mute" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ Número incorrecto de argumentos. Ingrese "!help mute" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); }}
+function unmuteCommand(player, message) { var msgArray = message.split(/ +/).slice(1); if (msgArray.length > 0) { if (msgArray[0].length > 0 && msgArray[0][0] == '#') { msgArray[0] = msgArray[0].substring(1, msgArray[0].length); if (room.getPlayer(parseInt(msgArray[0])) != null) { var playerUnmute = room.getPlayer(parseInt(msgArray[0])); if (muteArray.getByPlayerId(playerUnmute.id) != null) { var muteObj = muteArray.getByPlayerId(playerUnmute.id); muteObj.remove() 
+room.sendAnnouncement(`                                             ☄️ ${playerUnmute.name} ya no esta muteado!`, null, announcementColor, 'bold', HaxNotification.CHAT); } else { room.sendAnnouncement(`☄️ Este jugador no esta muteado !`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ No hay ningún jugador con tal ID en la sala. Ingresa "!help unmute" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); } } else if (msgArray[0].length > 0 && parseInt(msgArray[0]) > 0 && muteArray.getById(parseInt(msgArray[0])) != null) { var playerUnmute = muteArray.getById(parseInt(msgArray[0])); playerUnmute.remove(); room.sendAnnouncement(`                                             ☄️ ${playerUnmute.name} ha sido desmuteado!`, null, announcementColor, 'bold', HaxNotification.CHAT); } else { room.sendAnnouncement(`☄️ Formato incorrecto para su argumento. Ingresa "!help unmute" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ Número incorrecto de argumentos. Ingresa "!help unmute" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); }}
+function muteListCommand(player, message) { if (muteArray.list.length == 0) { room.sendAnnouncement("                                             ☄️ No hay nadie en la lista de mute ! 🔇", player.id, announcementColor, 'bold', null); return false; } var cstm = '                                             ☄️ Lista de muteados : '; for (let mute of muteArray.list) { cstm += mute.name + `[${mute.id}], `; } cstm = cstm.substring(0, cstm.length - 2) + '.'; room.sendAnnouncement(cstm, player.id, announcementColor, 'bold', null);}
+/* MASTER COMMANDS */
+
+function setVipCommand(player, message) {
+    var msgArray = message.split(/ +/).slice(1);
+    if (msgArray.length > 0) {
+    if (msgArray[0].length > 0 && msgArray[0][0] == '#') {
+    msgArray[0] = msgArray[0].substring(1, msgArray[0].length);
+    if (room.getPlayer(parseInt(msgArray[0])) != null) {
+    var playerVip = room.getPlayer(parseInt(msgArray[0]));
+    
+        if (!vipList.map((a) => a[0]).includes(authArray[playerVip.id][0])) {
+          vipList.push([authArray[playerVip.id][0], playerVip.name]);
+          room.sendAnnouncement(
+            `☄️ ${playerVip.name} ¡Ahora es VIP!`,
+            null,
+            announcementColor,
+            'bold',
+            HaxNotification.CHAT
+          );
+        } else {
+          room.sendAnnouncement(
+            `☄️ ¡Este jugador ya es VIP!`,
+            player.id,
+            redColor,
+            'bold',
+            HaxNotification.CHAT
+          );
+        }
+      } else {
+        room.sendAnnouncement(
+          `☄️ No hay ningún jugador con dicha identificación en la sala. Ingrese "!help setvip" para obtener más información.`,
+          player.id,
+          redColor,
+          HaxNotification.CHAT
+        );
+      }
+    } else {
+      room.sendAnnouncement(`☄️ Formato incorrecto para su argumento. Ingrese "!help setvip" para obtener más información.`,
+        player.id,
+        redColor,
+        HaxNotification.CHAT
+      );
+    }
+    } else {
+    room.sendAnnouncement('☄️ Número incorrecto de argumentos. Ingrese "!help setvip" para obtener más información.',
+    player.id,
+    redColor, HaxNotification.CHAT ); }};
+
+    function removeVipCommand(player, message) {
+        var msgArray = message.split(/ +/).slice(1);
+        if (msgArray.length > 0) {
+            if (msgArray[0].length > 0 && msgArray[0][0] == '#') {
+                msgArray[0] = msgArray[0].substring(1, msgArray[0].length);
+                if (room.getPlayer(parseInt(msgArray[0])) != null) {
+                    var playerVip = room.getPlayer(parseInt(msgArray[0]));
+    
+                    if (vipList.map((a) => a[0]).includes(authArray[playerVip.id][0])) {
+                        vipList = vipList.filter((a) => a[0] != authArray[playerVip.id][0]);
+room.sendAnnouncement( `☄️ ${playerVip.name} ¡Ya no es VIP!`, null, announcementColor, 'bold', HaxNotification.CHAT ); } else { room.sendAnnouncement( `☄️ ¡Este jugador no es VIP!`, player.id, redColor,  HaxNotification.CHAT );  } } else {  room.sendAnnouncement( `☄️ No hay ningún jugador con dicha identificación en la sala. Ingrese "!help removevip" para obtener más información.`, player.id, redColor, HaxNotification.CHAT ); } } else if (msgArray[0].length > 0 && parseInt(msgArray[0]) < vipList.length) { var index = parseInt(msgArray[0]); var playerVip = vipList[index]; vipList.splice(index); room.sendAnnouncement( `☄️ ${playerVip[1]} ¡Ya no es VIP!`, null, announcementColor, 'bold', HaxNotification.CHAT ); } else { room.sendAnnouncement( `☄️ Formato incorrecto para su argumento. Ingrese "!help removevip" para obtener más información.`, player.id, redColor, HaxNotification.CHAT ); } } else { room.sendAnnouncement( `☄️ Número incorrecto de argumentos. Ingrese "!help removevip" para obtener más información.`,  player.id, redColor, HaxNotification.CHAT );}}
+
+
+function anunciarCommand(player, message) { if (player && message) { const words = message.split(' '); if (words[0] === '!anunciar') { words.shift();  const mensajeFinal = words.join(' '); room.sendAnnouncement(` \n` + mensajeFinal + `\n `, null, announcementColor, 'bold',  HaxNotification.MENTION); }}}
+function clearbansCommand(player, message) { var msgArray = message.split(/ +/).slice(1); if (msgArray.length == 0) { room.clearBans(); room.sendAnnouncement('🤡 ¡Bans eliminadas!', null, announcementColor, 'bold', null); banList = []; } else if (msgArray.length == 1) { if (parseInt(msgArray[0]) > 0) { var ID = parseInt(msgArray[0]); room.clearBan(ID); if (banList.length != banList.filter((p) => p[1] != ID).length) { room.sendAnnouncement(`☄️ ✔️ ${banList.filter((p) => p[1] == ID)[0][0]} ha sido desbaneado de la habitación!`, null, announcementColor, 'bold', null); } else { room.sendAnnouncement(`☄️ El ID que ingresó no tiene una prohibición asociada. Ingrese "!help clearbans" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); } banList = banList.filter((p) => p[1] != ID); } else { room.sendAnnouncement(`☄️ Se ingresó una identificación no válida. Ingrese "!help clearbans" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ Número incorrecto de argumentos. Ingrese "!help clearbans" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT);}}
+function banListCommand(player, message) { if (banList.length == 0) { room.sendAnnouncement("                                       ☄️ No hay nadie en la lista de baneados ! 📢", player.id, announcementColor, 'bold', null); return false; } var cstm = '☄️ Lista de baneados : '; for (let ban of banList) { cstm += ban[0] + `[${ban[1]}], `; } cstm = cstm.substring(0, cstm.length - 2) + '.'; room.sendAnnouncement(cstm, player.id, announcementColor, 'bold', null);}
+function adminListCommand(player, message) { if (adminList.length == 0) { room.sendAnnouncement("                                       ☄️ No hay nadie en la lista de administradores ! 📢", player.id, announcementColor, 'bold', null); return false; } var cstm = '☄️ Lista de admins : '; for (let i = 0; i < adminList.length; i++) { cstm += adminList[i][1] + `[${i}], `; } cstm = cstm.substring(0, cstm.length - 2) + '.'; room.sendAnnouncement(cstm, player.id, announcementColor, 'bold', null);}
+function añadirWinsCommand(player, message) { const args = message.split(' '); if (args.length !== 3 || !args[1].startsWith('#')) { room.sendAnnouncement('☄️ Uso incorrecto del comando. Ejemplo: !maswins #1 10', player.id, announcementColor, HaxNotification.MENTION); return false; } const playerId = parseInt(args[1].slice(1)); if (isNaN(playerId) || playerId < 0 || playerId >= authArray.length) { room.sendAnnouncement('☄️ El ID de jugador especificado no es válido.', player.id, announcementColor, HaxNotification.MENTION); return false; } var playerName = player.name; const winsToAdd = parseInt(args[2]); if (isNaN(winsToAdd) || winsToAdd < 0) { room.sendAnnouncement('☄️ La cantidad de victorias a añadir no es válida.', player.id, announcementColor,  HaxNotification.MENTION); return false; } var stats = new HaxStatistics(playerId); if (localStorage.getItem(authArray[playerId][0])) { stats = JSON.parse(localStorage.getItem(authArray[playerId][0])); } stats.wins += winsToAdd; localStorage.setItem(authArray[playerId][0], JSON.stringify(stats));
+
+// Envía un anuncio a la sala
+
+room.sendAnnouncement(`                                       ☄️ El administrador `+ playerName + ` ha añadido más wins a un jugador`, null, announcementColor, 'bold', HaxNotification.MENTION); return false;}
+function setAdminCommand(player, message) { var msgArray = message.split(/ +/).slice(1); if (msgArray.length > 0) { if (msgArray[0].length > 0 && msgArray[0][0] == '#') { msgArray[0] = msgArray[0].substring(1, msgArray[0].length); if (room.getPlayer(parseInt(msgArray[0])) != null) { var playerAdmin = room.getPlayer(parseInt(msgArray[0])); if (!adminList.map((a) => a[0]).includes(authArray[playerAdmin.id][0])) { if (!masterList.includes(authArray[playerAdmin.id][0])) { room.setPlayerAdmin(playerAdmin.id, true); adminList.push([authArray[playerAdmin.id][0], playerAdmin.name]); room.sendAnnouncement(`                      ☄️ ${playerAdmin.name} ahora es un administrador de sala!`, null, announcementColor, 'bold', HaxNotification.CHAT); } else { room.sendAnnouncement(`☄️ ¡Este jugador ya es un maestro!`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ ¡Este jugador ya es un administrador permanente!`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ No hay ningún jugador con tal ID en la sala. Introduzca "!help setadmin" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ Formato incorrecto para su argumento. Introduzca "!help setadmin" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ Número incorrecto de argumentos. Introduzca "!help setadmin" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); }}
+function removeAdminCommand(player, message) { var msgArray = message.split(/ +/).slice(1); if (msgArray.length > 0) { if (msgArray[0].length > 0 && msgArray[0][0] == '#') { msgArray[0] = msgArray[0].substring(1, msgArray[0].length); if (room.getPlayer(parseInt(msgArray[0])) != null) { var playerAdmin = room.getPlayer(parseInt(msgArray[0])); if (adminList.map((a) => a[0]).includes(authArray[playerAdmin.id][0])) { room.setPlayerAdmin(playerAdmin.id, false); adminList = adminList.filter((a) => a[0] != authArray[playerAdmin.id][0]); room.sendAnnouncement(`                                             ☄️ ${playerAdmin.name} ¡Ya no es un administrador de sala!`, null, announcementColor, 'bold', HaxNotification.CHAT); } else { room.sendAnnouncement(`☄️ ¡Este jugador no es un administrador permanente!`, player.id, announcementColor, HaxNotification.CHAT); } } else { room.sendAnnouncement(`☄️ No hay ningún jugador con tal ID en la sala. Ingresa "!help removeadmin" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); } } else if (msgArray[0].length > 0 && parseInt(msgArray[0]) < adminList.length) { var index = parseInt(msgArray[0]); var playerAdmin = adminList[index]; if (playersAll.findIndex((p) => authArray[p.id][0] == playerAdmin[0]) != -1) {
+
+// check if there is the removed admin in the room
+
+var indexRem = playersAll.findIndex((p) => authArray[p.id][0] == playerAdmin[0]); room.setPlayerAdmin(playersAll[indexRem].id, false); } adminList.splice(index); room.sendAnnouncement(`                                       ☄️ ${playerAdmin[1]} ¡Ya no es un administrador de sala!`, null, announcementColor, 'bold',  HaxNotification.CHAT); } else { room.sendAnnouncement(`☄️ Formato incorrecto para su argumento. Ingresa "!help removeadmin" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT); }} else { room.sendAnnouncement(`☄️ Número incorrecto de argumentos. Ingresa "!help removeadmin" para obtener más información.`, player.id, announcementColor, HaxNotification.CHAT);}}
+function passwordCommand(player, message) { var msgArray = message.split(/ +/).slice(1); if (msgArray.length > 0) { if (msgArray.length == 1 && msgArray[0] == '') { roomPassword = ''; room.setPassword(null); room.sendAnnouncement(`☄️ La contraseña de la sala ha sido eliminada.`, player.id, announcementColor, HaxNotification.CHAT); } roomPassword = msgArray.join(' '); room.setPassword(roomPassword); room.sendAnnouncement(`☄️ La contraseña de la sala se ha establecido en ${roomPassword}`, player.id, announcementColor, HaxNotification.CHAT); } else { if (roomPassword != '') { roomPassword = ''; room.setPassword(null); room.sendAnnouncement(`☄️ La contraseña de la sala ha sido eliminada.`, player.id, announcementColor, HaxNotification.CHAT); } else { room.sendAnnouncement(`☄️ La sala actualmente no tiene contraseña. Ingresar "!help password" para más información`, player.id, announcementColor, HaxNotification.CHAT);}}}
+
+/* GAME FUNCTIONS */
+
+function checkTime() { const scores = room.getScores(); if (game != undefined) game.scores = scores; if (Math.abs(scores.time - scores.timeLimit) <= 0.01 && scores.timeLimit != 0 && playSituation == Situation.PLAY) { if (scores.red != scores.blue) { if (!checkTimeVariable) { checkTimeVariable = true; setTimeout(() => { checkTimeVariable = false; }, 3000); scores.red > scores.blue ? endGame(Team.RED) : endGame(Team.BLUE); stopTimeout = setTimeout(() => { room.stopGame(); }, 2000); } return; } if (drawTimeLimit != 0) { goldenGoal = true; room.sendAnnouncement('                                                                   ⚽ ¡Gol gana!', null, announcementColor, 'bold', HaxNotification.CHAT); } } if (Math.abs(scores.time - drawTimeLimit * 60 - scores.timeLimit) <= 0.01 && scores.timeLimit != 0) { if (!checkTimeVariable) { checkTimeVariable = true; setTimeout(() => { checkTimeVariable = false; }, 10); endGame(Team.SPECTATORS); room.stopGame(); goldenGoal = false; }}}
+function instantRestart() { room.stopGame(); startTimeout = setTimeout(() => { room.startGame(); }, 10);}
+function resumeGame() { startTimeout = setTimeout(() => { room.startGame();}, 1000); setTimeout(() => { room.pauseGame(false);}, 500);}
+function endGame(winner) { const scores = room.getScores(); game.scores = scores; lastWinner = winner; endGameVariable = true; if (winner == Team.RED) { streak++; room.sendAnnouncement(`🔴 Equipo rojo ganador  ${scores.red} - ${scores.blue} ! Streak: ${streak}`, null, redColor, 'bold', HaxNotification.CHAT); } else if (winner == Team.BLUE) { streak = 1; room.sendAnnouncement(`✨ Ganó el equipo azul ${scores.blue} - ${scores.red} ! Racha actual: ${streak}`, null, blueColor, 'bold', HaxNotification.CHAT); } else { streak = 60; room.sendAnnouncement( '☄️ ¡Ya no pueden ganar mas!', null, announcementColor, 'bold', HaxNotification.CHAT); } let possessionRedPct = (possession[0] / (possession[0] + possession[1])) * 100; let possessionBluePct = 100 - possessionRedPct; let possessionString = `🔴 ${possessionRedPct.toFixed(0)}% - ${possessionBluePct.toFixed(0)}% 🔵`; let actionRedPct = (actionZoneHalf[0] / (actionZoneHalf[0] + actionZoneHalf[1])) * 100; let actionBluePct = 100 - actionRedPct; let actionString = `🔴 ${actionRedPct.toFixed(0)}% - ${actionBluePct.toFixed(0)}% 🔵`; let CSString = getCSString(scores); room.sendAnnouncement( `POSESION DE BOLA: 🔴 ${possessionString}\n` + `Control de partida: 🔴 ${actionString}\n` + `${CSString}`, null, 0xD8BFD8, 'bold', HaxNotification.NONE); updateStats(); if (players.length >= 2 * teamSize - 1) activateChooseMode();}
+
+/* CHOOSING FUNCTIONS */
+
+function activateChooseMode() { chooseMode = true; slowMode = chooseModeSlowMode; room.sendAnnouncement(`☄️ El modo lento cambió para elegir la duración del modo de: ${chooseModeSlowMode}s.`, null, announcementColor, HaxNotification.CHAT);}
+function deactivateChooseMode() { chooseMode = false; clearTimeout(timeOutCap); if (slowMode != defaultSlowMode) { slowMode = defaultSlowMode; room.sendAnnouncement(`☄️ El modo lento cambió para elegir la duración del modo de: ${defaultSlowMode}s.`, null, announcementColor, HaxNotification.CHAT); } redCaptainChoice = ''; blueCaptainChoice = '';}
+function getSpecList(player) { if (player == null) return null; var cstm = '✨ Jugadores: '; for (let i = 0; i < teamSpec.length; i++) { cstm += teamSpec[i].name + `[${i + 1}], `; } cstm = cstm.substring(0, cstm.length - 2) + '.'; room.sendAnnouncement( cstm, player.id, infoColor, 'bold', HaxNotification.CHAT);}
+function choosePlayer() { clearTimeout(timeOutCap); let captain; if (teamRed.length <= teamBlue.length && teamRed.length != 0) { captain = teamRed[0]; } else if (teamBlue.length < teamRed.length && teamBlue.length != 0) { captain = teamBlue[0];} if (captain != null) { room.sendAnnouncement("☄️ Para elegir un jugador, ingrese su número en la lista dada o use 'top', 'random' o 'bottom'.", captain.id, infoColor, 'bold', HaxNotification.MENTION); timeOutCap = setTimeout( (player) => { room.sendAnnouncement(`☄️ Apresúrate ${player.name}, solo ${Number.parseInt(String(chooseTime / 2))} Quedan segundos para elegir !`, player.id, warningColor, 'bold', HaxNotification.MENTION); timeOutCap = setTimeout( (player) => { room.kickPlayer(player.id,"¡No elegiste a tiempo! 😡", false); }, chooseTime * 500, captain ); }, chooseTime * 1000, captain ); } if (teamRed.length != 0 && teamBlue.length != 0) { getSpecList(teamRed.length <= teamBlue.length ? teamRed[0] : teamBlue[0]); }}
+function chooseModeFunction(player, message) { var msgArray = message.split(/ +/); if (player.id == teamRed[0].id || player.id == teamBlue[0].id) { if (teamRed.length <= teamBlue.length && player.id == teamRed[0].id) { if (['top', 'auto'].includes(msgArray[0].toLowerCase())) { room.setPlayerTeam(teamSpec[0].id, Team.RED); redCaptainChoice = 'top'; clearTimeout(timeOutCap); room.sendAnnouncement(`☄️ ${player.name} ¡Eligió a los superiores!`, null, announcementColor, 'bold', HaxNotification.CHAT); } else if (['random', 'rand'].includes(msgArray[0].toLowerCase())) { var r = getRandomInt(teamSpec.length); room.setPlayerTeam(teamSpec[r].id, Team.RED); redCaptainChoice = 'random'; clearTimeout(timeOutCap); room.sendAnnouncement(`☄️ ${player.name} eligio Aleatorio!`, null, announcementColor, 'bold', HaxNotification.CHAT);} else if (['bottom', 'bot'].includes(msgArray[0].toLowerCase())) {
+room.setPlayerTeam(teamSpec[teamSpec.length - 1].id, Team.RED); redCaptainChoice = 'bottom'; clearTimeout(timeOutCap); room.sendAnnouncement(`☄️ ${player.name} eligio a los ultimos !`, null, announcementColor, 'bold', HaxNotification.CHAT); } else if (!Number.isNaN(Number.parseInt(msgArray[0]))) { if (Number.parseInt(msgArray[0]) > teamSpec.length || Number.parseInt(msgArray[0]) < 1) { room.sendAnnouncement(`☄️ ¡El número que elegiste no es válido!`, player.id, announcementColor, HaxNotification.CHAT); } else { room.setPlayerTeam(teamSpec[Number.parseInt(msgArray[0]) - 1].id, Team.RED); room.sendAnnouncement(`${player.name} Jugara con ${teamSpec[Number.parseInt(msgArray[0]) - 1].name} !`, null, announcementColor, 'bold', HaxNotification.CHAT); } } else return false; return true; } if (teamRed.length > teamBlue.length && player.id == teamBlue[0].id) { if (['top', 'auto'].includes(msgArray[0].toLowerCase())) { room.setPlayerTeam(teamSpec[0].id, Team.BLUE); blueCaptainChoice = 'top'; clearTimeout(timeOutCap); room.sendAnnouncement(`☄️ ${player.name} ¡Eligió a los superiores!`, null, announcementColor, 'bold', HaxNotification.CHAT); } else if (['random', 'rand'].includes(msgArray[0].toLowerCase())) { room.setPlayerTeam(teamSpec[getRandomInt(teamSpec.length)].id, Team.BLUE); blueCaptainChoice = 'random'; clearTimeout(timeOutCap); room.sendAnnouncement(`☄️ ${player.name} eligio Aleatorio!`, null, announcementColor, 'bold', HaxNotification.CHAT); } else if (['bottom', 'bot'].includes(msgArray[0].toLowerCase())) { room.setPlayerTeam(teamSpec[teamSpec.length - 1].id, Team.BLUE); blueCaptainChoice = 'bottom'; clearTimeout(timeOutCap); room.sendAnnouncement(`☄️ ${player.name} eligio a los ultimos !`, null, announcementColor, 'bold', HaxNotification.CHAT); } else if (!Number.isNaN(Number.parseInt(msgArray[0]))) { if (Number.parseInt(msgArray[0]) > teamSpec.length || Number.parseInt(msgArray[0]) < 1) { room.sendAnnouncement(`☄️ ¡El número que elegiste no es válido!`, player.id, announcementColor, HaxNotification.CHAT); } else { room.setPlayerTeam(teamSpec[Number.parseInt(msgArray[0]) - 1].id, Team.BLUE); room.sendAnnouncement(`${player.name} Jugaran con ${teamSpec[Number.parseInt(msgArray[0]) - 1].name} !`, null, announcementColor, 'bold', HaxNotification.CHAT); } } else return false; return true; } }}
+function checkCaptainLeave(player) { if ((teamRed.findIndex((red) => red.id == player.id) == 0 && chooseMode && teamRed.length <= teamBlue.length) ||(teamBlue.findIndex((blue) => blue.id == player.id) == 0 && chooseMode && teamBlue.length < teamRed.length)) { choosePlayer(); capLeft = true; setTimeout(() => { capLeft = false; }, 10); }}
+function slowModeFunction(player, message) { if (!player.admin) { if (!SMSet.has(player.id)) { SMSet.add(player.id); setTimeout( (number) => { SMSet.delete(number); }, slowMode * 1000, player.id ); } else { return true; } } return false;}
+
+/* PLAYER FUNCTIONS */
+
+function updateTeams() { playersAll = room.getPlayerList(); players = playersAll.filter((p) => !AFKSet.has(p.id)); teamRed = players.filter((p) => p.team == Team.RED); teamBlue = players.filter((p) => p.team == Team.BLUE); teamSpec = players.filter((p) => p.team == Team.SPECTATORS);}
+function updateAdmins(excludedPlayerID = 0) { if (players.length != 0 && players.filter((p) => p.admin).length < maxAdmins) { let playerArray = players.filter((p) => p.id != excludedPlayerID && !p.admin); let arrayID = playerArray.map((player) => player.id); room.setPlayerAdmin(Math.min(...arrayID), true); }}
+function getRole(player) {
+    return (
+        masterList.some((a) => a == authArray[player.id][0]) * 3 +
+        adminList.some((a) => a[0] == authArray[player.id][0]) * 2 +
+        vipList.some(a=>a[0] == authArray[player.id][0]) * 1 +
+        player.admin * 2
+    );
+}
+function ghostKickHandle(oldP, newP) { var teamArrayId = getTeamArray(oldP.team, true).map((p) => p.id); teamArrayId.splice(teamArrayId.findIndex((id) => id == oldP.id), 1, newP.id); room.kickPlayer(oldP.id, 'Ghost kick', false); room.setPlayerTeam(newP.id, oldP.team); room.setPlayerAdmin(newP.id, oldP.admin); room.reorderPlayers(teamArrayId, true); if (oldP.team != Team.SPECTATORS && playSituation != Situation.STOP) { var discProp = room.getPlayerDiscProperties(oldP.id); room.setPlayerDiscProperties(newP.id, discProp); }}
+
+/* ACTIVITY FUNCTIONS */
+
+function handleActivityPlayer(player) { let pComp = getPlayerComp(player); if (pComp != null) { pComp.inactivityTicks++; if (pComp.inactivityTicks == 60 * ((2 / 3) * afkLimit)) { room.sendAnnouncement(`☄️ ${player.name}, Muevete en los proximos ${Math.floor(afkLimit / 3)} ¡Segundos, o serás kickeado!`, player.id, warningColor, HaxNotification.MENTION); return; } if (pComp.inactivityTicks >= 60 * afkLimit) { pComp.inactivityTicks = 0; if (game.scores.time <= afkLimit - 0.5) { setTimeout(() => { !chooseMode ? instantRestart() : room.stopGame(); }, 10); } room.kickPlayer(player.id, 'No te quedes AFK en la partida', false); }}}
+function handleActivityPlayerTeamChange(changedPlayer) { if (changedPlayer.team == Team.SPECTATORS) { let pComp = getPlayerComp(changedPlayer); if (pComp != null) pComp.inactivityTicks = 0; }}
+function handleActivityStop() { for (let player of players) { let pComp = getPlayerComp(player); if (pComp != null) pComp.inactivityTicks = 0; }}
+function handleActivity() { if (gameState === State.PLAY && players.length > 1) { for (let player of teamRed) { handleActivityPlayer(player); } for (let player of teamBlue) { handleActivityPlayer(player); }}}
+
+/* LINEUP FUNCTIONS */
+function getStartingLineups() { var compositions = [[], []]; for (let player of teamRed) { compositions[0].push(new PlayerComposition(player, authArray[player.id][0], [0], [])); } for (let player of teamBlue) { compositions[1].push(new PlayerComposition(player, authArray[player.id][0], [0], [])); } return compositions;}
+
+function handleLineupChangeTeamChange(changedPlayer) { if (gameState != State.STOP) { var playerLineup; if (changedPlayer.team == Team.RED) {
+            // player gets in red team
+var redLineupAuth = game.playerComp[0].map((p) => p.auth); var ind = redLineupAuth.findIndex((auth) => auth == authArray[changedPlayer.id][0]); if (ind != -1) {
+                // Player goes back in
+playerLineup = game.playerComp[0][ind]; if (playerLineup.timeExit.includes(game.scores.time)) {
+                    // gets subbed off then in at the exact same time -> no sub
+playerLineup.timeExit = playerLineup.timeExit.filter((t) => t != game.scores.time); } else { playerLineup.timeEntry.push(game.scores.time); } } else { playerLineup = new PlayerComposition(changedPlayer, authArray[changedPlayer.id][0], [game.scores.time], []); game.playerComp[0].push(playerLineup); } } else if (changedPlayer.team == Team.BLUE) {
+            // player gets in blue team
+var blueLineupAuth = game.playerComp[1].map((p) => p.auth); var ind = blueLineupAuth.findIndex((auth) => auth == authArray[changedPlayer.id][0]); if (ind != -1) {
+                // Player goes back in
+playerLineup = game.playerComp[1][ind]; if (playerLineup.timeExit.includes(game.scores.time)) {
+                    // gets subbed off then in at the exact same time -> no sub
+playerLineup.timeExit = playerLineup.timeExit.filter((t) => t != game.scores.time); } else { playerLineup.timeEntry.push(game.scores.time); } } else { playerLineup = new PlayerComposition(changedPlayer, authArray[changedPlayer.id][0], [game.scores.time], []); game.playerComp[1].push(playerLineup); } } if (teamRed.some((r) => r.id == changedPlayer.id)) {
+            // player leaves red team
+var redLineupAuth = game.playerComp[0].map((p) => p.auth); var ind = redLineupAuth.findIndex((auth) => auth == authArray[changedPlayer.id][0]); playerLineup = game.playerComp[0][ind]; if (playerLineup.timeEntry.includes(game.scores.time)) {
+                // gets subbed off then in at the exact same time -> no sub
+if (game.scores.time == 0) { game.playerComp[0].splice(ind, 1); } else { playerLineup.timeEntry = playerLineup.timeEntry.filter((t) => t != game.scores.time); } } else { playerLineup.timeExit.push(game.scores.time); }} else if (teamBlue.some((r) => r.id == changedPlayer.id)) {
+            // player leaves blue team
+var blueLineupAuth = game.playerComp[1].map((p) => p.auth); var ind = blueLineupAuth.findIndex((auth) => auth == authArray[changedPlayer.id][0]); playerLineup = game.playerComp[1][ind]; if (playerLineup.timeEntry.includes(game.scores.time)) {
+                // gets subbed off then in at the exact same time -> no sub
+if (game.scores.time == 0) { game.playerComp[1].splice(ind, 1); } else { playerLineup.timeEntry = playerLineup.timeEntry.filter((t) => t != game.scores.time); } } else { playerLineup.timeExit.push(game.scores.time); }}}}
+
+function handleLineupChangeLeave(player) { if (playSituation != Situation.STOP) { if (player.team == Team.RED) {
+            // player gets in red team
+var redLineupAuth = game.playerComp[0].map((p) => p.auth); var ind = redLineupAuth.findIndex((auth) => auth == authArray[player.id][0]); var playerLineup = game.playerComp[0][ind]; if (playerLineup.timeEntry.includes(game.scores.time)) {
+                // gets subbed off then in at the exact same time -> no sub
+if (game.scores.time == 0) { game.playerComp[0].splice(ind, 1); } else { playerLineup.timeEntry = playerLineup.timeEntry.filter((t) => t != game.scores.time); } } else { playerLineup.timeExit.push(game.scores.time); } } else if (player.team == Team.BLUE) {
+            // player gets in blue team
+var blueLineupAuth = game.playerComp[1].map((p) => p.auth); var ind = blueLineupAuth.findIndex((auth) => auth == authArray[player.id][0]); var playerLineup = game.playerComp[1][ind]; if (playerLineup.timeEntry.includes(game.scores.time)) {
+                // gets subbed off then in at the exact same time -> no sub
+if (game.scores.time == 0) { game.playerComp[1].splice(ind, 1); } else { playerLineup.timeEntry = playerLineup.timeEntry.filter((t) => t != game.scores.time); } } else { playerLineup.timeExit.push(game.scores.time); }}}}
+
+/* TEAM BALANCE FUNCTIONS */
+
+function balanceTeams() { if (!chooseMode) { if (players.length == 0) { room.stopGame(); room.setScoreLimit(scoreLimit); room.setTimeLimit(timeLimit); } else if (players.length == 1 && teamRed.length == 0) { instantRestart(); setTimeout(() => { stadiumCommand(emptyPlayer, `!training`); }, 5); room.setPlayerTeam(players[0].id, Team.RED); } else if (Math.abs(teamRed.length - teamBlue.length) == teamSpec.length && teamSpec.length > 0) { const n = Math.abs(teamRed.length - teamBlue.length); if (players.length == 2) { instantRestart(); setTimeout(() => { stadiumCommand(emptyPlayer, `!classic`); }, 5); } if (teamRed.length > teamBlue.length) { for (var i = 0; i < n; i++) { room.setPlayerTeam(teamSpec[i].id, Team.BLUE); } } else { for (var i = 0; i < n; i++) { room.setPlayerTeam(teamSpec[i].id, Team.RED); } } } else if (Math.abs(teamRed.length - teamBlue.length) > teamSpec.length) { const n = Math.abs(teamRed.length - teamBlue.length); if (players.length == 1) { instantRestart(); setTimeout(() => { stadiumCommand(emptyPlayer, `!training`); }, 5); room.setPlayerTeam(players[0].id, Team.RED); return; } else if (teamSize > 2 && players.length == 5) { instantRestart(); setTimeout(() => { stadiumCommand(emptyPlayer, `!classic`); }, 5); } if (players.length == teamSize * 2 - 1) { teamRedStats = []; teamBlueStats = []; } if (teamRed.length > teamBlue.length) { for (var i = 0; i < n; i++) { room.setPlayerTeam(teamRed[teamRed.length - 1 - i].id, Team.SPECTATORS); } } else { for (var i = 0; i < n; i++) { room.setPlayerTeam(teamBlue[teamBlue.length - 1 - i].id, Team.SPECTATORS); }} } else if (Math.abs(teamRed.length - teamBlue.length) < teamSpec.length && teamRed.length != teamBlue.length) { room.pauseGame(true); activateChooseMode(); choosePlayer(); } else if (teamSpec.length >= 2 && teamRed.length == teamBlue.length && teamRed.length < teamSize) { if (teamRed.length == 2) { instantRestart(); setTimeout(() => { stadiumCommand(emptyPlayer, `!big`); }, 5);} topButton(); }}}
+function handlePlayersJoin() { if (chooseMode) { if (teamSize > 2 && players.length == 6) { setTimeout(() => { stadiumCommand(emptyPlayer, `!big`); }, 5); } getSpecList(teamRed.length <= teamBlue.length ? teamRed[0] : teamBlue[0]); } balanceTeams();}
+function handlePlayersLeave() { if (gameState != State.STOP) { var scores = room.getScores(); if (players.length >= 2 * teamSize && scores.time >= (5 / 6) * game.scores.timeLimit && teamRed.length != teamBlue.length) { var rageQuitCheck = false; if (teamRed.length < teamBlue.length) { if (scores.blue - scores.red == 2) { endGame(Team.BLUE); rageQuitCheck = true; } } else { if (scores.red - scores.blue == 2) { endGame(Team.RED); rageQuitCheck = true; } } if (rageQuitCheck) { room.sendAnnouncement("🤖 Abandono detectado, juego terminado", null, infoColor, HaxNotification.MENTION)
+stopTimeout = setTimeout(() => { room.stopGame(); }, 100); return; } } } if (chooseMode) { if (teamSize > 2 && players.length == 5) { setTimeout(() => { stadiumCommand(emptyPlayer, `!classic`); }, 5); } if (teamRed.length == 0 || teamBlue.length == 0) { room.setPlayerTeam(teamSpec[0].id, teamRed.length == 0 ? Team.RED : Team.BLUE); return; } if (Math.abs(teamRed.length - teamBlue.length) == teamSpec.length) { deactivateChooseMode(); resumeGame(); var b = teamSpec.length; if (teamRed.length > teamBlue.length) { for (var i = 0; i < b; i++) { clearTimeout(insertingTimeout); insertingPlayers = true; setTimeout(() => { room.setPlayerTeam(teamSpec[0].id, Team.BLUE); }, 5 * i); } insertingTimeout = setTimeout(() => { insertingPlayers = false; }, 5 * b); } else { for (var i = 0; i < b; i++) { clearTimeout(insertingTimeout); insertingPlayers = true; setTimeout(() => { room.setPlayerTeam(teamSpec[0].id, Team.RED); }, 5 * i); } insertingTimeout = setTimeout(() => { insertingPlayers = false; }, 5 * b); } return; } if (streak == 0 && gameState == State.STOP) { if (Math.abs(teamRed.length - teamBlue.length) == 2) { var teamIn = teamRed.length > teamBlue.length ? teamRed : teamBlue; room.setPlayerTeam(teamIn[teamIn.length - 1].id, Team.SPECTATORS) } } if (teamRed.length == teamBlue.length && teamSpec.length < 2) { deactivateChooseMode(); resumeGame(); return; } if (capLeft) { choosePlayer(); } else { getSpecList(teamRed.length <= teamBlue.length ? teamRed[0] : teamBlue[0]); } } balanceTeams();}
+
+function handlePlayersTeamChange(byPlayer) { if (chooseMode && !removingPlayers && byPlayer == null) { if (Math.abs(teamRed.length - teamBlue.length) == teamSpec.length) { deactivateChooseMode(); resumeGame(); var b = teamSpec.length; if (teamRed.length > teamBlue.length) { for (var i = 0; i < b; i++) { clearTimeout(insertingTimeout); insertingPlayers = true; setTimeout(() => { room.setPlayerTeam(teamSpec[0].id, Team.BLUE); }, 5 * i); } insertingTimeout = setTimeout(() => { insertingPlayers = false; }, 5 * b); } else { for (var i = 0; i < b; i++) { clearTimeout(insertingTimeout); insertingPlayers = true; setTimeout(() => { room.setPlayerTeam(teamSpec[0].id, Team.RED); }, 5 * i); } insertingTimeout = setTimeout(() => { insertingPlayers = false; }, 5 * b); } return; } else if ((teamRed.length == teamSize && teamBlue.length == teamSize) ||(teamRed.length == teamBlue.length && teamSpec.length < 2)) { deactivateChooseMode(); resumeGame(); } else if (teamRed.length <= teamBlue.length && redCaptainChoice != '') { if (redCaptainChoice == 'top') { room.setPlayerTeam(teamSpec[0].id, Team.RED); } else if (redCaptainChoice == 'random') { var r = getRandomInt(teamSpec.length); room.setPlayerTeam(teamSpec[r].id, Team.RED); } else { room.setPlayerTeam(teamSpec[teamSpec.length - 1].id, Team.RED); } return; } else if (teamBlue.length < teamRed.length && blueCaptainChoice != '') { if (blueCaptainChoice == 'top') { room.setPlayerTeam(teamSpec[0].id, Team.BLUE); } else if (blueCaptainChoice == 'random') { var r = getRandomInt(teamSpec.length); room.setPlayerTeam(teamSpec[r].id, Team.BLUE); } else { room.setPlayerTeam(teamSpec[teamSpec.length - 1].id, Team.BLUE); } return; } else { choosePlayer();}}}
+function handlePlayersStop(byPlayer) { if (byPlayer == null && endGameVariable) { if (chooseMode) { if (players.length == 2 * teamSize) { chooseMode = false; resetButton(); for (var i = 0; i < teamSize; i++) { clearTimeout(insertingTimeout); insertingPlayers = true; setTimeout(() => { randomButton(); }, 200 * i); } insertingTimeout = setTimeout(() => { insertingPlayers = false; }, 200 * teamSize); startTimeout = setTimeout(() => { room.startGame(); }, 2000); } else { if (lastWinner == Team.RED) { blueToSpecButton(); } else if (lastWinner == Team.BLUE) { redToSpecButton(); setTimeout(() => { swapButton(); }, 10); } else { resetButton(); } clearTimeout(insertingTimeout); insertingPlayers = true; setTimeout(() => { topButton(); }, 300); insertingTimeout = setTimeout(() => { insertingPlayers = false; }, 300); } } else { if (players.length == 2) { if (lastWinner == Team.BLUE) { swapButton(); } startTimeout = setTimeout(() => { room.startGame(); }, 2000); } else if (players.length == 3 || players.length >= 2 * teamSize + 1) { if (lastWinner == Team.RED) { blueToSpecButton(); } else { redToSpecButton(); setTimeout(() => { swapButton(); }, 5); } clearTimeout(insertingTimeout); insertingPlayers = true; setTimeout(() => { topButton(); }, 200); insertingTimeout = setTimeout(() => { insertingPlayers = false; }, 300); startTimeout = setTimeout(() => { room.startGame(); }, 2000); } else if (players.length == 4) { resetButton(); clearTimeout(insertingTimeout); insertingPlayers = true; setTimeout(() => { randomButton(); setTimeout(() => { randomButton(); }, 500); }, 500); insertingTimeout = setTimeout(() => { insertingPlayers = false; }, 2000); startTimeout = setTimeout(() => { room.startGame(); }, 2000); } else if (players.length == 5 || players.length >= 2 * teamSize + 1) { if (lastWinner == Team.RED) { blueToSpecButton(); } else { redToSpecButton(); setTimeout(() => { swapButton(); }, 5); } clearTimeout(insertingTimeout); insertingPlayers = true; insertingTimeout = setTimeout(() => { insertingPlayers = false; }, 200); setTimeout(() => { topButton(); }, 200); activateChooseMode(); } else if (players.length == 6) { resetButton(); clearTimeout(insertingTimeout); insertingPlayers = true; insertingTimeout = setTimeout(() => { insertingPlayers = false; }, 1500); setTimeout(() => { randomButton(); setTimeout(() => { randomButton(); setTimeout(() => { randomButton(); }, 500); }, 500); }, 500); startTimeout = setTimeout(() => { room.startGame();}, 2000);}}}}
+
+/* STATS FUNCTIONS */
+
+/* GK FUNCTIONS */
+
+function handleGKTeam(team) { if (team == Team.SPECTATORS) { return null;} let teamArray = team == Team.RED ? teamRed : teamBlue; let playerGK = teamArray.reduce((prev, current) => { if (team == Team.RED) { return (prev?.position.x < current.position.x) ? prev : current } else { return (prev?.position.x > current.position.x) ? prev : current } }, null); let playerCompGK = getPlayerComp(playerGK); return playerCompGK;}
+function handleGK() { let redGK = handleGKTeam(Team.RED); if (redGK != null) { redGK.GKTicks++; } let blueGK = handleGKTeam(Team.BLUE); if (blueGK != null) { blueGK.GKTicks++;}}
+function getGK(team) { if (team == Team.SPECTATORS) { return null; } let teamArray = team == Team.RED ? game.playerComp[0] : game.playerComp[1]; let playerGK = teamArray.reduce((prev, current) => { return (prev?.GKTicks > current.GKTicks) ? prev : current }, null); return playerGK;}
+function getCS(scores) { let playersNameCS = []; let redGK = getGK(Team.RED); let blueGK = getGK(Team.BLUE); if (redGK != null && scores.blue == 0) { playersNameCS.push(redGK.player.name); } if (blueGK != null && scores.red == 0) { playersNameCS.push(blueGK.player.name); } return playersNameCS;}
+function getCSString(scores) { let playersCS = getCS(scores); if (playersCS.length == 0) { return "🥅 No CS"; } else if (playersCS.length == 1) { return `🥅 ${playersCS[0]} Mas una CS.`; } else { return `🥅 ${playersCS[0]} y ${playersCS[1]} tuvieron una CS.`;}}
+
+/* GLOBAL STATS FUNCTIONS */
+
+function getLastTouchOfTheBall() { const ballPosition = room.getBallPosition(); updateTeams(); let playerArray = []; for (let player of players) { if (player.position != null) { var distanceToBall = pointDistance(player.position, ballPosition); if (distanceToBall < triggerDistance) { if (playSituation == Situation.KICKOFF) playSituation = Situation.PLAY; playerArray.push([player, distanceToBall]); }}} if (playerArray.length != 0) { let playerTouch = playerArray.sort((a, b) => a[1] - b[1])[0][0]; if (lastTeamTouched == playerTouch.team || lastTeamTouched == Team.SPECTATORS) { if (lastTouches[0] == null || (lastTouches[0] != null && lastTouches[0].player.id != playerTouch.id)) { game.touchArray.push(new BallTouch(playerTouch, game.scores.time, getGoalGame(), ballPosition)); lastTouches[0] = checkGoalKickTouch(game.touchArray, game.touchArray.length - 1, getGoalGame()); lastTouches[1] = checkGoalKickTouch(game.touchArray, game.touchArray.length - 2, getGoalGame()); }} lastTeamTouched = playerTouch.team;}}
+function getBallSpeed() { var ballProp = room.getDiscProperties(0); return Math.sqrt(ballProp.xspeed ** 2 + ballProp.yspeed ** 2) * speedCoefficient;}
+function getGameStats() { if (playSituation == Situation.PLAY && gameState == State.PLAY) { lastTeamTouched == Team.RED ? possession[0]++ : possession[1]++; var ballPosition = room.getBallPosition(); ballPosition.x < 0 ? actionZoneHalf[0]++ : actionZoneHalf[1]++; handleGK(); }}
+
+/* GOAL ATTRIBUTION FUNCTIONS */
+
+function getGoalAttribution(team) { var goalAttribution = Array(2).fill(null); if (lastTouches[0] != null) { if (lastTouches[0].player.team == team) {
+
+// Direct goal scored by player
+
+if (lastTouches[1] != null && lastTouches[1].player.team == team) { goalAttribution = [lastTouches[0].player, lastTouches[1].player]; } else { goalAttribution = [lastTouches[0].player, null];}} else {
+
+// Own goal
+
+goalAttribution = [lastTouches[0].player, null]; } } return goalAttribution;}
+function getGoalString(team) { var goalString; var scores = game.scores; var goalAttribution = getGoalAttribution(team); if (goalAttribution[0] != null) { if (goalAttribution[0].team == team) { if (goalAttribution[1] != null && goalAttribution[1].team == team) { goalString = `⚽ ${getTimeGame(scores.time)} ${frasesGols[Math.floor(Math.random() * frasesGols.length)]} ${goalAttribution[0].name} ${frasesAsiten[Math.floor(Math.random() * frasesAsiten.length)]} ${goalAttribution[1].name}. VELOCIDAD : ${ballSpeed.toFixed(2)}km/h.`; game.goals.push(new Goal(scores.time, team, goalAttribution[0], goalAttribution[1])); } else { goalString = `⚽ ${getTimeGame(scores.time)} ${frasesGols[Math.floor(Math.random() * frasesGols.length)]} ${goalAttribution[0].name} ! VELOCIDAD : ${ballSpeed.toFixed(2)}km/h.`; game.goals.push(new Goal(scores.time, team, goalAttribution[0], null)); } } else { goalString = `😂 ${getTimeGame(scores.time)} ${frasesOG[Math.floor(Math.random() * frasesOG.length)]} ${goalAttribution[0].name} ! VELOCIDAD : ${ballSpeed.toFixed(2)}km/h.`; game.goals.push(new Goal(scores.time, team, goalAttribution[0], null)); } } else { goalString = `☄️ ${getTimeGame(scores.time)} ${frasesGols[Math.floor(Math.random() * frasesGols.length)]} Gol para ${team == Team.RED ? 'red' : 'blue'} equipo ! VELOCIDAD : ${ballSpeed.toFixed(2)}km/h.`; game.goals.push(new Goal(scores.time, team, null, null)); } return goalString;}
+
+/* ROOM STATS FUNCTIONS */
+
+function updatePlayerStats(player, teamStats) { var stats = new HaxStatistics(player.name); var pComp = getPlayerComp(player); if (localStorage.getItem(authArray[player.id][0])) { stats = JSON.parse(localStorage.getItem(authArray[player.id][0])); } stats.games++; if (lastWinner == teamStats) stats.wins++; stats.winrate = ((100 * stats.wins) / (stats.games || 1)).toFixed(1) + `%`; stats.goals += getGoalsPlayer(pComp); stats.assists += getAssistsPlayer(pComp); stats.ownGoals += getOwnGoalsPlayer(pComp); stats.CS += getCSPlayer(pComp); stats.playtime += getGametimePlayer(pComp); localStorage.setItem(authArray[player.id][0], JSON.stringify(stats));}
+function updateStats() { if (players.length >= 2 * teamSize &&(game.scores.time >= (5 / 6) * game.scores.timeLimit || game.scores.red == game.scores.scoreLimit || game.scores.blue == game.scores.scoreLimit) && teamRedStats.length >= teamSize && teamBlueStats.length >= teamSize) { for (let player of teamRedStats) { updatePlayerStats(player, Team.RED); } for (let player of teamBlueStats) { updatePlayerStats(player, Team.BLUE);}}}
+function printRankings(statKey, id = 0) { var leaderboard = []; statKey = statKey == "cs" ? "CS" : statKey; for (var i = 0; i < localStorage.length; i++) { var key = localStorage.key(i); if (key.length == 43) leaderboard.push([ JSON.parse(localStorage.getItem(key)).playerName, JSON.parse(localStorage.getItem(key))[statKey], ]); } if (leaderboard.length < 5) { if (id != 0) { room.sendAnnouncement('¡Todavía no se han jugado suficientes juegos!', player.id, announcementColor, HaxNotification.CHAT); } return; } leaderboard.sort(function (a, b) { return b[1] - a[1]; }); var rankingString = `${statKey.charAt(0).toUpperCase() + statKey.slice(1)}> `; for (let i = 0; i < 5; i++) { let playerName = leaderboard[i][0]; let playerStat = leaderboard[i][1]; if (statKey == 'playtime') playerStat = getTimeStats(playerStat); rankingString += `#${i + 1} ${playerName} : ${playerStat}, `; } rankingString = rankingString.substring(0, rankingString.length - 2); room.sendAnnouncement(rankingString, id, infoColor, 'bold', HaxNotification.CHAT);}
+
+/* GET STATS FUNCTIONS */
+
+function getGamePlayerStats(player) { var stats = new HaxStatistics(player.name); var pComp = getPlayerComp(player); stats.goals += getGoalsPlayer(pComp); stats.assists += getAssistsPlayer(pComp); stats.ownGoals += getOwnGoalsPlayer(pComp); stats.playtime += getGametimePlayer(pComp); stats.CS += getCSPlayer(pComp); return stats;}
+function getGametimePlayer(pComp) { if (pComp == null) return 0; var timePlayer = 0; for (let j = 0; j < pComp.timeEntry.length; j++) { if (pComp.timeExit.length < j + 1) { timePlayer += game.scores.time - pComp.timeEntry[j]; } else { timePlayer += pComp.timeExit[j] - pComp.timeEntry[j]; } } return Math.floor(timePlayer);}
+function getGoalsPlayer(pComp) { if (pComp == null) return 0; var goalPlayer = 0; for (let goal of game.goals) { if (goal.striker != null && goal.team === pComp.player.team) { if (authArray[goal.striker.id][0] == pComp.auth) { goalPlayer++; } } } return goalPlayer;}
+function getOwnGoalsPlayer(pComp) { if (pComp == null) return 0; var goalPlayer = 0; for (let goal of game.goals) { if (goal.striker != null && goal.team !== pComp.player.team) { if (authArray[goal.striker.id][0] == pComp.auth) { goalPlayer++; } } } return goalPlayer;}
+function getAssistsPlayer(pComp) { if (pComp == null) return 0; var assistPlayer = 0; for (let goal of game.goals) { if (goal.assist != null) { if (authArray[goal.assist.id][0] == pComp.auth) { assistPlayer++; } } } return assistPlayer;}
+function getGKPlayer(pComp) { if (pComp == null) return 0; let GKRed = getGK(Team.RED); if (pComp.auth == GKRed?.auth) { return Team.RED; } let GKBlue = getGK(Team.BLUE); if (pComp.auth == GKBlue?.auth) { return Team.BLUE; } return Team.SPECTATORS;}
+function getCSPlayer(pComp) { if (pComp == null || game.scores == null) return 0; if (getGKPlayer(pComp) == Team.RED && game.scores.blue == 0) { return 1; } else if (getGKPlayer(pComp) == Team.BLUE && game.scores.red == 0) { return 1; } return 0;}
+function actionReportCountTeam(goals, team) { let playerActionSummaryTeam = []; let indexTeam = team == Team.RED ? 0 : 1; let indexOtherTeam = team == Team.RED ? 1 : 0; for (let goal of goals[indexTeam]) { if (goal[0] != null) { if (playerActionSummaryTeam.find(a => a[0].id == goal[0].id)) { let index = playerActionSummaryTeam.findIndex(a => a[0].id == goal[0].id); playerActionSummaryTeam[index][1]++; } else { playerActionSummaryTeam.push([goal[0], 1, 0, 0]); } if (goal[1] != null) { if (playerActionSummaryTeam.find(a => a[0].id == goal[1].id)) { let index = playerActionSummaryTeam.findIndex(a => a[0].id == goal[1].id); playerActionSummaryTeam[index][2]++; } else { playerActionSummaryTeam.push([goal[1], 0, 1, 0]); } } } } if (goals[indexOtherTeam].length == 0) { let playerCS = getGK(team)?.player; if (playerCS != null) { if (playerActionSummaryTeam.find(a => a[0].id == playerCS.id)) { let index = playerActionSummaryTeam.findIndex(a => a[0].id == playerCS.id); playerActionSummaryTeam[index][3]++; } else { playerActionSummaryTeam.push([playerCS, 0, 0, 1]); } } } playerActionSummaryTeam.sort((a, b) => (a[1] + a[2] + a[3]) - (b[1] + b[2] + b[3])); return playerActionSummaryTeam;}
+
+/* PRINT FUNCTIONS */
+
+function printPlayerStats(stats) {
+    let statsString = '';
+    for (let [key, value] of Object.entries(stats)) {
+        if (key == 'playerName') statsString += `${value}: `;
+        else {
+            if (key == 'playtime') value = getTimeStats(value);
+            let reCamelCase = /([A-Z](?=[a-z]+)|[A-Z]+(?![a-z]))/g;
+            let statName = key.replaceAll(reCamelCase, ' $1').trim();
+            statsString += `${statName.charAt(0).toUpperCase() + statName.slice(1)}: ${value}, `;
+        }
+    }
+    statsString = statsString.substring(0, statsString.length - 2);
+    return statsString;
+}
+
+
+/* FETCH FUNCTIONS */
+
+function fetchGametimeReport(game) { var fieldGametimeRed = { name: '🌕 **Equipo Rojo** 🌕', value: '\n⌛ Tiempo jugado:\n', inline: true, }; var fieldGametimeBlue = { name: '🌕 **Equipo Azul** 🌕', value: '\n⌛ Tiempo jugado:\n', inline: true, }; var redTeamTimes = game.playerComp[0].map((p) => [p.player, getGametimePlayer(p)]); var blueTeamTimes = game.playerComp[1].map((p) => [p.player, getGametimePlayer(p)]); for (let time of redTeamTimes) { var minutes = getMinutesReport(time[1]); var seconds = getSecondsReport(time[1]); fieldGametimeRed.value += `- **${time[0].name}:** ${minutes > 0 ? `${minutes}m` : ''}` + `${seconds > 0 || minutes == 0 ? `${seconds}s` : ''}\n`; } fieldGametimeRed.value += `\n${blueTeamTimes.length - redTeamTimes.length > 0 ? '\n'.repeat(blueTeamTimes.length - redTeamTimes.length) : '' }`; fieldGametimeRed.value += '┈┈┈┈┈┈┈┈┈┈┈┈┈'; for (let time of blueTeamTimes) { var minutes = getMinutesReport(time[1]); var seconds = getSecondsReport(time[1]); fieldGametimeBlue.value += `- **${time[0].name}:** ${minutes > 0 ? `${minutes}m` : ''}` + `${seconds > 0 || minutes == 0 ? `${seconds}s` : ''}\n`; } fieldGametimeBlue.value += `\n${redTeamTimes.length - blueTeamTimes.length > 0 ? '\n'.repeat(redTeamTimes.length - blueTeamTimes.length) : '' }`; fieldGametimeBlue.value += '┈┈┈┈┈┈┈┈┈┈┈┈┈'; return [fieldGametimeRed, fieldGametimeBlue];}
+function fetchActionsSummaryReport(game) { var fieldReportRed = { name: '🌕 **Equipo Rojo** 🌕', value: '📊 Estadisticas:\n\n', inline: true, }; var fieldReportBlue = { name: '🌕 **Equipo Azul** 🌕', value: '📊 Estadisticas:\n\n', inline: true, }; var goals = [[], []]; for (let i = 0; i < game.goals.length; i++) { goals[game.goals[i].team - 1].push([game.goals[i].striker, game.goals[i].assist]); } var redActions = actionReportCountTeam(goals, Team.RED); if (redActions.length > 0) { for (let act of redActions) { fieldReportRed.value += ` ${act[0].team != Team.RED ? '[OG] ' : ''}${act[0].name}:` + `${act[1] > 0 ? ` ${act[1]}G` : ''}` + `${act[2] > 0 ? ` ${act[2]}A` : ''}` + `${act[3] > 0 ? ` ${act[3]}CS` : ''}\n`; }} var blueActions = actionReportCountTeam(goals, Team.BLUE); if (blueActions.length > 0) { for (let act of blueActions) { fieldReportBlue.value += ` ${act[0].team != Team.BLUE ? '[OG] ' : ''}${act[0].name}:` + `${act[1] > 0 ? ` ${act[1]}G` : ''}` + `${act[2] > 0 ? ` ${act[2]}A` : ''}` + `${act[3] > 0 ? ` ${act[3]}CS` : ''}\n`; } } fieldReportRed.value += `\n${blueActions.length - redActions.length > 0 ? '\n'.repeat(blueActions.length - redActions.length) : '' }`; fieldReportRed.value += '┈┈┈┈┈┈┈┈┈┈┈┈┈'; fieldReportBlue.value += `\n${redActions.length - blueActions.length > 0 ? '\n'.repeat(redActions.length - blueActions.length) : '' }`; fieldReportBlue.value += '┈┈┈┈┈┈┈┈┈┈┈┈┈'; return [fieldReportRed, fieldReportBlue];}
+function fetchSummaryEmbed(game) { var fetchEndgame = [fetchGametimeReport, fetchActionsSummaryReport]; var logChannel = gameWebhook; var fields = [ { name: '🌕 **Equipo Rojo** 🌕', value: '┈┈┈┈┈┈┈┈┈┈┈┈┈\n', inline: true, }, { name: '🌕 **Equipo Azul** 🌕', value: '┈┈┈┈┈┈┈┈┈┈┈┈┈\n', inline: true, }, ]; for (let i = 0; i < fetchEndgame.length; i++) { var fieldsReport = fetchEndgame[i](game); fields[0].value += fieldsReport[0].value + '\n\n'; fields[1].value += fieldsReport[1].value + '\n\n'; } fields[0].value = fields[0].value.substring(0, fields[0].value.length - 2); fields[1].value = fields[1].value.substring(0, fields[1].value.length - 2); var possR = possession[0] / (possession[0] + possession[1]); var possB = 1 - possR; var possRString = (possR * 100).toFixed(0).toString(); var possBString = (possB * 100).toFixed(0).toString(); var zoneR = actionZoneHalf[0] / (actionZoneHalf[0] + actionZoneHalf[1]); var zoneB = 1 - zoneR; var zoneRString = (zoneR * 100).toFixed(0).toString(); var zoneBString = (zoneB * 100).toFixed(0).toString(); var win = (game.scores.red > game.scores.blue) * 1 + (game.scores.blue > game.scores.red) * 2; var objectBodyWebhook = { embeds: [ { title: (win == 1 ? '🎉 **Equipo Rojo** [' : '**Equipo Rojo** [') + game.scores.red + ' | ' + game.scores.blue + (win == 2 ? '] **Equipo Azul** 🎉' : '] **Equipo Azul**'), description: '\n```c\nPosesión: ' + possRString + '% - ' + possBString + '%' + `\nDuracion: ${getTimeEmbed(game.scores.time)}` + '\nZona Activa: ' + zoneRString + '% - ' + zoneBString + '%\n```\n\n', color: 0x7DFA89, fields: fields, footer: { text: `ID: #${getIdReport()}`, }, timestamp: new Date().toISOString(), }, ], username: '🔫 WITHFIELD 4v4 | ¡24/7 💥🕹️!' }; if (logChannel != '') { fetch(logChannel, { method: 'POST', body: JSON.stringify(objectBodyWebhook), headers: { 'Content-Type': 'application/json', },}).then((res) => res);}}
+
+/* EVENTS */
+/* PLAYER MOVEMENT */
+
+room.onPlayerJoin = function (player) {isMassive(); authArray[player.id] = [player.auth, player.conn]; if (roomWebhook != '') {fetch(roomWebhook, { method: 'POST', body: JSON.stringify({ content: `[${getDate()}] 🔵🔵 Ingreso (${playersAll.length + 1}/${maxPlayers})\n**` + `${player.name}** \n ID: [${authArray[player.id][0]}]\n CONN: {${authArray[player.id][1]}}`, username: roomName, }),headers: {'Content-Type': 'application/json',},}).then((res) => res); } room.sendAnnouncement(` 
+∘     ╔═════════════════════════╗
+║                 sᴛᴀᴛs:ᴏɴ   
+║                  ʜᴀxʙᴀʟʟ                             
+║                   ᴀᴜᴛᴏ                                    
+║                                                                 
+         ╟─────────────────────────
+║        !ᴀғᴋ !ʙʙ !ʜᴇʟᴘ !ᴍᴇ !showme      
+     ╚═════════════════════════╝
+                Online 24/7  
+
+¡ Utiliza !help para ver los comandos disponibles !
+
+\nNo dudes en reportar algun error`, player.id, 0x6ECAFF, 'bold', HaxNotification.CHAT); updateTeams(); updateAdmins(); if (masterList.some(auth => auth == player.auth)) {
+    room.sendAnnouncement(
+        `El Super Admin ${player.name} Ha entrado el GM 👑 !!`,
+        null,
+        announcementColor,
+        'bold',
+        HaxNotification.CHAT
+    );
+    room.setPlayerAdmin(player.id, true);
+} else if (adminList.map((a) => a[0]).some(auth => auth == player.auth)) {
+console.log('entro admin');
+    room.sendAnnouncement(
+        `El Admin ${player.name} GM 👑 !!`,
+        null,
+        announcementColor,
+        'bold',
+        HaxNotification.CHAT
+    );
+    room.setPlayerAdmin(player.id, true);
+}else if(vipList.some(vip=>vip[0] == player.auth)){
+room.sendAnnouncement(
+    `El vip ${player.name} A Llegado A Demostrar Su Gran Nivel 💎 !!`,
+    null,
+    announcementColor,
+    'bold',
+    HaxNotification.CHAT
+);
+}
+const sameAuthCheck = playersAll.filter((p) => p.id != player.id && authArray[p.id][0] == player.auth);
+if (sameAuthCheck.length > 0 && !debugMode) {
+    var oldPlayerArray = playersAll.filter((p) => p.id != player.id && authArray[p.id][0] == player.auth);
+    for (const oldPlayer of oldPlayerArray) {
+        ghostKickHandle(oldPlayer, player);
+    }
+}
+handlePlayersJoin();
+};
+room.onPlayerTeamChange = function (changedPlayer, byPlayer) { handleLineupChangeTeamChange(changedPlayer); if (AFKSet.has(changedPlayer.id) && changedPlayer.team != Team.SPECTATORS) { room.setPlayerTeam(changedPlayer.id, Team.SPECTATORS); room.sendAnnouncement(`                                        ${changedPlayer.name} esta afk !`, null, announcementColor, 'bold', HaxNotification.CHAT); return; } updateTeams(); if (gameState != State.STOP) { if (changedPlayer.team != Team.SPECTATORS && game.scores.time <= (3 / 4) * game.scores.timeLimit && Math.abs(game.scores.blue - game.scores.red) < 2) { changedPlayer.team == Team.RED ? teamRedStats.push(changedPlayer) : teamBlueStats.push(changedPlayer); } } handleActivityPlayerTeamChange(changedPlayer); handlePlayersTeamChange(byPlayer);};
+room.onPlayerLeave = function (player) { handleLineupChangeLeave(player); checkCaptainLeave(player); updateTeams(); updateAdmins(); handlePlayersLeave();  const numPlayers = room.getPlayerList().length; if (numPlayers == 24) { room.setPassword(); room.sendAnnouncement( " La contraseña ha sido removida, la sala esta abierta a todos", null, announcementColor, "bold", HaxNotification.MENTION ); }} 
+room.onPlayerKicked = function (kickedPlayer, reason, ban, byPlayer) { kickFetchVariable = true; if (roomWebhook != '') { var stringContent = `[${getDate()}] ⛔ ${ban ? 'BAN' : 'KICK'} (${playersAll.length}/${maxPlayers})\n` + `**${kickedPlayer.name}** [${authArray[kickedPlayer.id][0]}] {${authArray[kickedPlayer.id][1]}} fue ${ban ? 'baneado' : 'kickeado'}` + `${byPlayer != null ? ' por **' + byPlayer.name + '** [' + authArray[byPlayer.id][0] + '] {' + authArray[byPlayer.id][1] + '}' : ''}`
+fetch(roomWebhook, { method: 'POST', body: JSON.stringify({ content: stringContent, username: roomName, }), headers: { 'Content-Type': 'application/json', }, }).then((res) => res); } if ((ban && ((byPlayer != null &&(byPlayer.id == kickedPlayer.id || getRole(byPlayer) < Role.MASTER)) || getRole(kickedPlayer) == Role.MASTER)) || disableBans) { room.clearBan(kickedPlayer.id); return; } if (byPlayer != null && getRole(byPlayer) < Role.ADMIN_PERM) { room.sendAnnouncement('☄️ ¡No está permitido expulsar/banear a los jugadores!', byPlayer.id, announcementColor, HaxNotification.CHAT); room.setPlayerAdmin(byPlayer.id, false); return; } if (ban) banList.push([kickedPlayer.name, kickedPlayer.id]);};
+
+/* PLAYER ACTIVITY */
+
+room.onPlayerChat = function (player, message) { if (gameState !== State.STOP && player.team != Team.SPECTATORS) { let pComp = getPlayerComp(player); if (pComp != null) pComp.inactivityTicks = 0; } let msgArray = message.split(/ +/); if (msgArray[0][0] == '!') { let command = getCommand(msgArray[0].slice(1).toLowerCase()); if (command != false && commands[command].roles <= getRole(player)) commands[command].function(player, message); else room.sendAnnouncement(`Usa !help para ver los comandos.`, player.id, 0x6ECAFF, 'bold', HaxNotification.CHAT); return false; } if (msgArray[0].toLowerCase() == 't') { teamChat(player, message); return false; } if (msgArray[0].substring(0, 2) === '@@') { playerChat(player, message); return false; } if (chooseMode && teamRed.length * teamBlue.length != 0) { var choosingMessageCheck = chooseModeFunction(player, message); if (choosingMessageCheck) return false; } if (slowMode > 0) { var filter = slowModeFunction(player, message); if (filter) return false; } if (!player.admin && muteArray.getByAuth(authArray[player.id][0]) != null) { room.sendAnnouncement(`                                        🟡Has sido silenciado`, player.id, announcementColor, 'bold', HaxNotification.CHAT); return false; }function getAuth(player) { return player.name; // Utiliza el nombre del jugador como identificador único
+} var authKey = getAuth(player); // Assuming you have a function to get the authentication key
+if (localStorage.getItem(authArray[player.id][0])) { stats = JSON.parse(localStorage.getItem(authArray[player.id][0])); const role = getRole(player); var announcement = ""; var chatColor = ""; if (role == Role.VIP) { announcement += `「 💎 」`; } if (stats.wins > 300) { announcement += `🥇 ρяσ∂ιgισ| `; chatColor = "0x05C5FF"; }  else if (stats.wins > 210) { announcement += `⚡ ¢яα¢кє∂| `; chatColor = "0xCCCCCC"; }  else if (stats.wins > 190) { announcement += `🌈 αѕ¢єη∂ιєηтє| `; chatColor = "0xFFF8DC"; }  else if (stats.wins > 170) { announcement += `🌌 ησ ƒєαя| `; chatColor = "0xFFEBCD"; }  else if (stats.wins > 150) { announcement += `🌟 єѕтяєℓℓα ƒυgαz| `; chatColor = "0xFFDAB9"; }  else if (stats.wins > 120) { announcement += `👹 ρяσ ѕкιℓℓє∂| `; chatColor = "0xEEE8AA"; } else if (stats.wins > 100) { announcement += `🎮 gαмєя| `; chatColor = "0xFFFACD"; } else if (stats.wins > 75) { announcement += `➰ яα∂ιαηтє| `; chatColor = "0xFFC12F"; } else if (stats.wins > 50) { announcement += `✨ єχρєяιмєηтα∂σ| `; chatColor = "0xB0E0E6"; }  else if (stats.wins > 30) { announcement += `🌀 ѕкιℓℓє∂| `; chatColor = "0xF0E68C"; } else if (stats.wins > 20) { announcement += `🌕 ѕσвяєѕαℓιєηтє| `; chatColor = "0xEBEBEB"; } else if (stats.wins > 10) { announcement += `⏳∂єѕтα¢α∂σ| `; chatColor = "0xFF69B4"; } else if (stats.wins > 3) { announcement += `🥨 αρяєη∂ιz| `; chatColor = "0xFF1493"; } else {  announcement += `🦠 ηєωвιє| `; chatColor = "0xffd700"; } if (player.admin) { announcement += `「 ☄️🔧 」`; chatColor = "0xffd700";  } var announcementMessage = " " + player.name + ": " + message; room.sendAnnouncement(announcement + announcementMessage, null, parseInt(chatColor)); return false;}else { var errorMessage = `🎓 ρυρ| ${player.name}: ${message}`; room.sendAnnouncement(errorMessage, null, 0xFAF0E6); return false;}};
+var teamIDs = [{ Index: 0, Name: "Espectadores" }, { Index: 1, Name: "☄️ Comienza el juego\n" }, { Index: 2, Name: "x" }];
+var teams = [
+  { ID: 1, longName: "Linaje", uniform: [
+    { angle: 90, mainColor: [0xFF5733, 0xFFC12F], avatarColor: 0xEBEBEB },
+    { angle: 90, mainColor: [0x7DFA89, 0x7DFA89], avatarColor: 0xEBEBEB },
+    { angle: 90, mainColor: [0xFF0000, 0x00FF00], avatarColor: 0x00FF00 },
+    { angle: 90, mainColor: [0xFF69B4, 0x8A2BE2], avatarColor: 0xFF69B4 }
+  ] },
+  { ID: 2, longName: "Mikoto", uniform: [
+    { angle: 90, mainColor: [0x896728, 0x896728], avatarColor: 0xEBEBEB },
+    { angle: 90, mainColor: [0xE5E4E2, 0xE5E4E2], avatarColor: 0xEBEBEB },
+    { angle: 90, mainColor: [0xFFFF00, 0x00FFFF], avatarColor: 0xFFFF00 },
+    { angle: 90, mainColor: [0xFF4500, 0x32CD32], avatarColor: 0xFF4500 }
+  ] },
+  { ID: 3, longName: "Borun", uniform: [
+    { angle: 90, mainColor: [0x800080, 0x800080], avatarColor: 0xE3E3E3 },
+    { angle: 90, mainColor: [0xD8BFD8, 0xD8BFD8], avatarColor: 0xE3E3E3 },
+    { angle: 90, mainColor: [0x8B4513, 0x228B22], avatarColor: 0x8B4513 },
+    { angle: 90, mainColor: [0xFF1493, 0x7CFC00], avatarColor: 0xFF1493 }
+  ] },
+  { ID: 4, longName: "Vasco", uniform: [
+    { angle: 40, mainColor: [0xE3B022, 0xE3B022], avatarColor: 0xEBEBEB },
+    { angle: 40, mainColor: [0xFFF8DC, 0xFFF8DC], avatarColor: 0xEBEBEB },
+    { angle: 40, mainColor: [0xCD5C5C, 0x8B4513], avatarColor: 0xCD5C5C },
+    { angle: 40, mainColor: [0x008B8B, 0x20B2AA], avatarColor: 0x008B8B }
+  ] },
+  { ID: 5, longName: "Grêmio", uniform: [
+    { angle: 0, mainColor: [0x061C33, 0xC4120C], avatarColor: 0xEBEBEB },
+    { angle: 0, mainColor: [0xC4120C, 0xC4120C], avatarColor: 0xEBEBEB },
+    { angle: 0, mainColor: [0x2E8B57, 0x800080], avatarColor: 0x2E8B57 },
+    { angle: 0, mainColor: [0xFF6347, 0x4682B4], avatarColor: 0xFF6347 }
+  ] },
+  // Add other teams as needed
+];
+
+function getRandomIntegers(length) {
+  var numbers = Array.from({ length }, (_, i) => i);
+  var randomInts = [];
+  for (var i = 0; i < length; i++) {
+    var randomIndex = Math.floor(Math.random() * numbers.length);
+    randomInts.push(numbers.splice(randomIndex, 1)[0]);
+  }
+  return randomInts;
+}
+
+function getRandomIntegers(length) { var randomInts = [0, 0]; var numbers = []; if (!isNaN(length)) { for (var n = 1; n <= length; n++) { numbers.push(n);}} for (var i = 0; i < randomInts.length; i++) { randomInts[i] = numbers[Math.floor(Math.random() * numbers.length)]; if (i < randomInts.length - 1) { var index = numbers.indexOf(randomInts[i]); index !== -1 ? numbers.splice(index, 1) : console.log("Error in deleting random number");}} return randomInts;}
+function randomUniforms() {
+     
+    // Genera dos conjuntos de números aleatorios
+    var randomInts = getRandomIntegers(teams.length);
+    var randomInts2 = getRandomIntegers(teams.length);
+  
+    // Asegúrate de que los dos conjuntos de números aleatorios sean distintos
+    while (randomInts[0] === randomInts2[0] || randomInts[1] === randomInts2[1]) {
+      randomInts2 = getRandomIntegers(teams.length);
+    }
+  
+    // Usa los números aleatorios para establecer los uniformes para ambos equipos
+    var t1 = { int: randomInts[0], teamID: 1 };
+    var t2 = { int: randomInts2[0], teamID: 2 };
+  
+    var index1 = teams.findIndex(team => team.ID == t1.int);
+    var index2 = teams.findIndex(team => team.ID == t2.int);
+  
+    if (index1 !== -1 && index2 !== -1) {
+      room.setTeamColors(t1.teamID, teams[index1].uniform[0].angle, teams[index1].uniform[0].avatarColor, teams[index1].uniform[0].mainColor);
+      room.setTeamColors(t2.teamID, teams[index2].uniform[0].angle, teams[index2].uniform[0].avatarColor, teams[index2].uniform[0].mainColor);
+    }
+  }
+room.onPlayerActivity = function (player) { if (gameState !== State.STOP) { let pComp = getPlayerComp(player); if (pComp != null) pComp.inactivityTicks = 0;}};
+room.onPlayerBallKick = function (player) { playerKickBall = player; if (playSituation != Situation.GOAL) { var ballPosition = room.getBallPosition(); if (game.touchArray.length == 0 || player.id != game.touchArray[game.touchArray.length - 1].player.id) { if (playSituation == Situation.KICKOFF) playSituation = Situation.PLAY; lastTeamTouched = player.team; game.touchArray.push(new BallTouch( player, game.scores.time, getGoalGame(), ballPosition)); lastTouches[0] = checkGoalKickTouch( game.touchArray, game.touchArray.length - 1, getGoalGame()); lastTouches[1] = checkGoalKickTouch( game.touchArray, game.touchArray.length - 2, getGoalGame());}}};
+
+/* GAME MANAGEMENT */
+
+room.onGameStart = function (byPlayer) { randomUniforms(); clearTimeout(startTimeout); if (byPlayer != null) clearTimeout(stopTimeout); game = new Game(); possession = [0, 0]; actionZoneHalf = [0, 0]; gameState = State.PLAY; endGameVariable = false; goldenGoal = false; playSituation = Situation.KICKOFF; lastTouches = Array(2).fill(null); lastTeamTouched = Team.SPECTATORS; teamRedStats = []; teamBlueStats = []; if (teamRed.length == teamSize && teamBlue.length == teamSize) { for (var i = 0; i < teamSize; i++) { teamRedStats.push(teamRed[i]); teamBlueStats.push(teamBlue[i]); } } calculateStadiumVariables(); };
+room.onGameStop = function (byPlayer) { clearTimeout(stopTimeout); clearTimeout(unpauseTimeout); if (byPlayer != null) clearTimeout(startTimeout); game.rec = room.stopRecording(); if (!cancelGameVariable && game.playerComp[0].length + game.playerComp[1].length > 0 &&((game.scores.timeLimit != 0 &&((game.scores.time >= 0.5 * game.scores.timeLimit &&game.scores.time < 0.75 * game.scores.timeLimit && game.scores.red != game.scores.blue) ||game.scores.time >= 0.75 * game.scores.timeLimit)) ||endGameVariable)) { fetchSummaryEmbed(game); if (fetchRecordingVariable) { setTimeout((gameEnd) => { fetchRecording(gameEnd); }, 500, game); }} cancelGameVariable = false; gameState = State.STOP; playSituation = Situation.STOP; updateTeams(); handlePlayersStop(byPlayer); handleActivityStop();};
+
+// Tamaño vip
+
+function isPlayerVip(player) {
+    const role = getRole(player);
+    // Verifica si el jugador tiene el rol VIP
+    return role == Role.VIP;
+}
+
+function onPlayerGoal(goalScorer,assistant){
+    if (isPlayerVip(goalScorer)) {
+        const originalRadius = 15;
+        const newRadius = 50;
+        room.setPlayerDiscProperties(goalScorer.id, { radius: newRadius });
+        const originalAvatar = null;
+        room.setPlayerAvatar(goalScorer.id, "💸");
+        const restoreTime = 3000;
+        setTimeout(() => {
+            room.setPlayerDiscProperties(goalScorer.id, { radius: originalRadius });
+            room.setPlayerAvatar(goalScorer.id, originalAvatar);
+        }, restoreTime);
+    }
+}
+
+// pausa juego
+
+room.onGamePause = function (byPlayer) {if (mentionPlayersUnpause && gameState == State.PAUSE) { if (byPlayer != null) { room.sendAnnouncement(`☄️ Juego pausado por ${byPlayer.name} !`, null, defaultColor, 'bold', HaxNotification.NONE); } else { room.sendAnnouncement(`☄️ Juego pausado !`, null, defaultColor, 'bold', HaxNotification.NONE); } }clearTimeout(unpauseTimeout);gameState = State.PAUSE;};
+room.onGameUnpause = function (byPlayer) { unpauseTimeout = setTimeout(() => { gameState = State.PLAY;}, 2000); if (mentionPlayersUnpause) { if (byPlayer != null) { room.sendAnnouncement(`☄️ Juego despausado por ${byPlayer.name} !`, null, defaultColor, 'bold', HaxNotification.NONE);} else { room.sendAnnouncement(`☄️ Juego Despausado !`, null, defaultColor, 'bold', HaxNotification.NONE);}} if ((teamRed.length == teamSize && teamBlue.length == teamSize && chooseMode) ||(teamRed.length == teamBlue.length && teamSpec.length < 2 && chooseMode)) { deactivateChooseMode();}};
+room.onTeamGoal = function (team) {const goalAttribution = getGoalAttribution(team); const goalScorer = goalAttribution[0]; const assistant = goalAttribution[1]; if (goalScorer) {onPlayerGoal(goalScorer, assistant);} const scores = room.getScores(); game.scores = scores; playSituation = Situation.GOAL; ballSpeed = getBallSpeed(); var goalString = getGoalString(team); for (let player of teamRed) { var playerComp = getPlayerComp(player); team == Team.RED ? playerComp.goalsScoredTeam++ : playerComp.goalsConcededTeam++;}for (let player of teamBlue) { var playerComp = getPlayerComp(player); team == Team.BLUE ? playerComp.goalsScoredTeam++ : playerComp.goalsConcededTeam++;}room.sendAnnouncement(goalString, null, team == Team.RED ? redColor : blueColor, null, HaxNotification.CHAT); if ((scores.scoreLimit != 0 && (scores.red == scores.scoreLimit || scores.blue == scores.scoreLimit)) || goldenGoal) { endGame(team); goldenGoal = false; stopTimeout = setTimeout(() => { room.stopGame();}, 1000);}};room.onPositionsReset = function () { lastTouches = Array(2).fill(null); lastTeamTouched = Team.SPECTATORS; playSituation = Situation.KICKOFF;};
+
+/* MISCELLANEOUS */
+
+const MAX_REQUESTS_PER_SECOND = 10;
+const TIME_WINDOW = 1000; // 1 second in milliseconds
+
+const userRequests = {};
+
+function handleConnection(request) {
+    const clientIP = request.socket.remoteAddress;
+
+    // Use a timestamp-based circular buffer for efficient request tracking
+    const timestamp = Date.now();
+    userRequests[clientIP] = userRequests[clientIP] || { count: 0, timestamps: [] };
+
+    // Remove timestamps older than the time window
+    userRequests[clientIP].timestamps = userRequests[clientIP].timestamps.filter((ts) => ts > timestamp - TIME_WINDOW);
+
+    // Check if the user has exceeded the allowed requests per second
+    if (userRequests[clientIP].timestamps.length >= MAX_REQUESTS_PER_SECOND) {
+        // Deny the connection or take appropriate action
+        console.log(`Denied connection from ${clientIP} due to excessive requests.`);
+        request.close();
+        return;
+    }
+
+    // Process the connection as usual
+
+    // Increment the request count and add the current timestamp
+    userRequests[clientIP].count++;
+    userRequests[clientIP].timestamps.push(timestamp);
+
+    // Reset request count after the time window
+    setTimeout(() => {
+        userRequests[clientIP].count = 0;
+        userRequests[clientIP].timestamps = [];
+    }, TIME_WINDOW);
+}
+
+
+// Function to display player information
+const displayPlayerInfo = (player) => {
+    console.log(`Player ${player.name} (ID: ${player.id}) - Team: ${player.team}`);
+};
+
+// Log the current players in the room every 60 seconds
+setInterval(() => {
+    console.log("Current players in the room:");
+    room.getPlayerList().forEach(displayPlayerInfo);
+}, 60000);
+
+room.onPlayerAdminChange = function (changedPlayer, byPlayer) { updateTeams(); if (!changedPlayer.admin && getRole(changedPlayer) >= Role.ADMIN_TEMP) { room.setPlayerAdmin(changedPlayer.id, true); return;} updateAdmins(byPlayer != null && !changedPlayer.admin && changedPlayer.id == byPlayer.id ? changedPlayer.id : 0);};
+room.onKickRateLimitSet = function (min, rate, burst, byPlayer) { if (byPlayer != null) { room.sendAnnouncement(`☄️ No está permitido cambiar el límite de kickrate. Debe permanecer en "6-0-0".`, player.id, announcementColor, HaxNotification.CHAT); room.setKickRateLimit(6, 0, 0);}};
+room.onStadiumChange = function (newStadiumName, byPlayer) { if (byPlayer !== null) { if (getRole(byPlayer) < Role.MASTER && currentStadium != 'other') { room.sendAnnouncement(`☄️ No puedes cambiar el estadio manualmente! Utilice los comandos del estadio.`, byPlayer.id, announcementColor, HaxNotification.CHAT); stadiumCommand(emptyPlayer, `!${currentStadium}`); } else { room.sendAnnouncement(`☄️ Mapa cambiado. Una vez que haya terminado con este mapa, utilice los comandos del estadio.`, byPlayer.id, infoColor, HaxNotification.CHAT); currentStadium = 'otro'; } } checkStadiumVariable = true;};
+room.onGameTick = function () {checkTime(); getLastTouchOfTheBall(); getGameStats(); handleActivity();};
+
+/* Anuncios */
+
+var announcements = [' \n☄️ Ingrese "t" antes de su mensaje para hablar con el equipo\n ',' \n☄️🎉 Recuerda divertirte y no toxiquear ',' \n☄️ Usa !afk si no te puedes mover \n ',' \n☄️ No seas antideportivo, juega limpio\n ',' \n☄️ Gracias por jugar en nuestra sala publica\n '];
+var currentAnnouncement = 0;
+setInterval(() => {
+currentAnnouncement = Math.floor(Math.random() * announcements.length);
+room.sendAnnouncement(announcements[currentAnnouncement], null, 0xFFEBCD, 'bold');
+}, 200000);
